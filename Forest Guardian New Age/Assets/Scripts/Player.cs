@@ -18,19 +18,27 @@ public class Player : MonoBehaviour
     public bool isMoving;// Określa,cz golem sie porusza
     public float actuallyPosition;//Okreśła aktualną Pozycje golema
     public int speedMoving;//Określa szybkość poruszania się golema
-    float speed;//określa predność golema.Ta zmienna w skrypcie,określa,po jakim czasie actuallyposition zmieni się
+    [SerializeField]float speed;//określa predność golema.Ta zmienna w skrypcie,określa,po jakim czasie actuallyposition zmieni się
     public string seeOponentName;//określa,jakiego oponnenta widzi
     public bool inAtack;//bool sprawdzający,czy golem aktualnie atakuje?.Odpala sie w przyciskach ataku,a dezaktywuje w Opponencie
-    public int damange;
-    public bool jumping;
-    public bool protectingOn;
+    public int damange;//Okreśła obraqżenia Golema
+    public bool jumping;//Określa,czy gracz skoczył
+    public bool protectingOn;//Okreśła czy Gracz broni sie
 
-    float time;
+    public int timeToRestAtack;//Okresla czas odpoczyn potrzebnego do ponownego zaatakowania.W skrycpie okrełsa czas potrzebny do możliwości ponownego ataku
+    public int timeToRestProtecting;//Okrełśa czas odpoczynku potrzebnego do ponownej obron.W skrypcie okreśła czas potrzebny do możliwości ponownej obrony
+    public int timeToResJumping;//Określa czas odpoczynku do ponownego skoku.Określa czas potrzebny do możliwości wybrania skaku
+
+    float timeMoving, timeToReadyAtack;//Czas chodzenia-okresala aktalny czas chodzenia gracza
 
     // Start is called before the first frame update
     void Start()
     {
+        isMoving = false;
         inAtack = false;
+        jumping = false;
+        protectingOn = false;
+        
 
         //isDamange = false;
 
@@ -69,7 +77,7 @@ public class Player : MonoBehaviour
         }
         //--------------------------------------------------------------------------------
 
-        if (seeOponentName != null)
+        if (seeOponentName.Length > 0)
         {
             if (isMoving)
             {
@@ -81,7 +89,7 @@ public class Player : MonoBehaviour
                 //Ogarni�cie,�e po jakim� czasie,golem wyl�duje
             }
         }
-        else
+        else if(seeOponentName.Length == 0)
         {
             MovingManagment();
         }
@@ -91,12 +99,14 @@ public class Player : MonoBehaviour
     {
         if (isMoving)
         {
-            if (time >= speed)
+            if (timeMoving >= speed)
             {
                 actuallyPosition += speedMoving;
+                timeMoving = 0;
+                //Ogarnąć tak,by po sekundize,bedzie nowy napis "Idziesz..."
             }
 
-            time += Time.deltaTime;
+            timeMoving += Time.deltaTime;
         }
     }
 }

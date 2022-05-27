@@ -135,13 +135,13 @@ public class Oponent : MonoBehaviour
     {
         if (player.inAtack && defense == false)
         {
-            //odwo�anie si� do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
+            //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
             live -= player.damange;
             player.inAtack = false;
         }
         else if (player.inAtack && defense)
         {
-            //odwo��nie si� do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
+            //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
             player.inAtack = false;
         }
     }

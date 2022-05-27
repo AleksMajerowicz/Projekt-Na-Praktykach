@@ -59,12 +59,12 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Managment.cs" />
-    <Compile Include="Assets\Scripts\Story.cs" />
     <Compile Include="Assets\Scripts\Interactions.cs" />
-    <Compile Include="Assets\Scripts\Oponent.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\ButtonFunctions.cs" />
+    <Compile Include="Assets\Scripts\Story.cs" />
+    <Compile Include="Assets\Scripts\Oponent.cs" />
+    <Compile Include="Assets\Scripts\Managment.cs" />
+    <Compile Include="Assets\Scripts\Player.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
