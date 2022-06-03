@@ -1575,13 +1575,10 @@ MonoBehaviour:
   speedMoving: 1
   speed: 2
   seeOponentName: 
-  inAtack: 0
   damange: 0
-  jumping: 0
-  protectingOn: 0
-  timeToRestAtack: 0
-  timeToRestProtecting: 0
-  timeToResJumping: 0
+  timeToRest: 010000000100000001000000
+  timneToReady: 000000000000000000000000
+  skills: 000000
 --- !u!4 &1025677970
 Transform:
   m_ObjectHideFlags: 0
