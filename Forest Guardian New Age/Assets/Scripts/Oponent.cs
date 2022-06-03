@@ -42,7 +42,7 @@ public class Oponent : MonoBehaviour
                 managment.oponentName = oponentName;
                 player.seeOponentName = oponentName;//Tymczasowo!
                 interactions.id = id;
-                player.inAtack = true;
+                player.skills[0] = true;
                 isSet = true;
             }
 
@@ -96,34 +96,34 @@ public class Oponent : MonoBehaviour
             time = 0;
             if (time >= timeToGiveDamange)
             {
-                //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji
+                //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji(distance atack i close atack dac jako lista,co pozwloli na zredukowanie ilości ifów)
                 //----------------------------------
                 if (distanceAtack)
                 {
-                    if (player.jumping)
+                    if (player.skills[2])
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                     else
                     {
                         //Zrobienie coś,że pojawi się informacja,że gracz dostał
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                 }
                 else if (closeAtack)
                 {
-                    if (player.protectingOn)
+                    if (player.skills[1])
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                     else
                     {
                         //Zrobienie coś,że pojawi się informacja,że gracz dostał
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                 }
                 //---------------------------------------
@@ -133,16 +133,16 @@ public class Oponent : MonoBehaviour
 
     void Defense()
     {
-        if (player.inAtack && defense == false)
+        if (player.skills[0] && defense == false)
         {
             //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
             live -= player.damange;
-            player.inAtack = false;
+            player.skills[0] = false;
         }
-        else if (player.inAtack && defense)
+        else if (player.skills[0] && defense)
         {
             //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
-            player.inAtack = false;
+            player.skills[0] = false;
         }
     }
 }

@@ -35,9 +35,9 @@ public class ButtonFunctions : MonoBehaviour
     //Wywo¹³nie np: PlayerDecision(Atack()) gdzie Atack() { return 1} 
     public void PlayerDecision(Player player,int index)
     {
-        if(player.timeToRestAtack >= player.timeToRestAtack)
+        if(player.timneToReady[index] >= player.timeToRest[index])
         {
-            //player.isatack = true;
+            player.skills[index] = true;
         }
         else
         {

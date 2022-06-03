@@ -22,7 +22,7 @@ public class Managment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(player.inAtack && interactions.end == false)
+        if(player.skills[0] && interactions.end == false)
         {
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], true,0.1f);
         }

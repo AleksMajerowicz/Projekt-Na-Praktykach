@@ -20,14 +20,18 @@ public class Player : MonoBehaviour
     public int speedMoving;//Określa szybkość poruszania się golema
     [SerializeField]float speed;//określa predność golema.Ta zmienna w skrypcie,określa,po jakim czasie actuallyposition zmieni się
     public string seeOponentName;//określa,jakiego oponnenta widzi
-    public bool inAtack;//bool sprawdzający,czy golem aktualnie atakuje?.Odpala sie w przyciskach ataku,a dezaktywuje w Opponencie
+    //public bool inAtack;//bool sprawdzający,czy golem aktualnie atakuje?.Odpala sie w przyciskach ataku,a dezaktywuje w Opponencie
     public int damange;//Okreśła obraqżenia Golema
-    public bool jumping;//Określa,czy gracz skoczył
-    public bool protectingOn;//Okreśła czy Gracz broni sie
+    //public bool jumping;//Określa,czy gracz skoczył
+    //public bool protectingOn;//Okreśła czy Gracz broni sie
 
-    public int timeToRestAtack;//Okresla czas odpoczyn potrzebnego do ponownego zaatakowania.W skrycpie okrełsa czas potrzebny do możliwości ponownego ataku
+    public int[] timeToRest;//określa czas poszczególnych umiejetnosci,potrzebnych do zregenerowania się
+    public int[] timneToReady;//określa aktualny czas odpoczynku poszczególnych umiejętności
+    public bool[] skills;//Określa umiejetności: I(index 0)- atak, II(index 1)- Obrone i III-Skok(index 2)
+
+    /*public int timeToRestAtack;//Okresla czas odpoczyn potrzebnego do ponownego zaatakowania.W skrycpie okrełsa czas potrzebny do możliwości ponownego ataku
     public int timeToRestProtecting;//Okrełśa czas odpoczynku potrzebnego do ponownej obron.W skrypcie okreśła czas potrzebny do możliwości ponownej obrony
-    public int timeToResJumping;//Określa czas odpoczynku do ponownego skoku.Określa czas potrzebny do możliwości wybrania skaku
+    public int timeToRestJumping;//Określa czas odpoczynku do ponownego skoku.Określa czas potrzebny do możliwości wybrania skaku*/
 
     float timeMoving, timeToReadyAtack;//Czas chodzenia-okresala aktalny czas chodzenia gracza
 
@@ -35,9 +39,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         isMoving = false;
-        inAtack = false;
-        jumping = false;
-        protectingOn = false;
+        for (int i = 0; i < skills.Length; i++)
+        {
+            skills[i] = false;
+        }
         
 
         //isDamange = false;
@@ -69,7 +74,7 @@ public class Player : MonoBehaviour
             listaPasków[aktualnaForma].gameObject.SetActive(true);
             aktualnaForma += 1;
         }
-        else if (inAtack == false && iloscSwiatla[aktualnaForma - 1] <= 1)//Ze względu na tą linijkę,trzeba ustawić mwarotści na min 1
+        else if (skills[0] == false && iloscSwiatla[aktualnaForma - 1] <= 1)//Ze względu na tą linijkę,trzeba ustawić mwarotści na min 1
         {
             //isDamange = false;
             aktualnaForma -= 1;
@@ -84,7 +89,7 @@ public class Player : MonoBehaviour
                 isMoving = false;
             }
 
-            //if(jumping)
+            if(skills[2])
             {
                 //Ogarni�cie,�e po jakim� czasie,golem wyl�duje
             }
