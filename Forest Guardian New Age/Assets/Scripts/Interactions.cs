@@ -90,6 +90,16 @@ public class Interactions : MonoBehaviour
         }
     }
 
+    /*Funkcja ManagmentInteractions
+    * Jest podobna w działaniu do Funkcji DisplayStory,bo też Wyświetla "Opowieść"
+    * Różni się tym,idek opowieści,tym razem jest id oponenta.jest to niezbędny zabieg,bo to pozwala się odniesc do
+    * Poszczeólnych akapitów Opowieści według id oponenta.Przt cyzm wazne ejst by w samej zmiennej descritpionInteraction były one ułożone według jakiegoś wzoru.
+    * Kiedy tekst index będzie większy od danje wiadomości interakcji,to w tedy id = ostatni index tejze tablicy
+    * który zawiera "Co robisz?".
+    * Po wypisaniu tego,dzięki zastosowaniu kolejności wykonywania linijek,ze wzgledu że id == długości tablicy,to jest wyświetlany danego Panelu Interakcji.
+    * Pozwoli to tez na jej wyłaczenie,keidy zasotsujemy Ucieczkę,jak i bez koniecnzości większej ilości funckji,kontynuwanie gry
+    */
+
     public void ManagmentInteraction(GameObject interactions, bool isActive, float t)
     {
         if (end == false)

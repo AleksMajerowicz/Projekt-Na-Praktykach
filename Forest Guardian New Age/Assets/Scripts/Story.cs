@@ -6,8 +6,8 @@ using UnityEngine;
 public class Story : ScriptableObject
 {
     [TextArea]
-    public string[] story;
-    public string[] chapter;
-    public string[] descritpionInteractions;
-    public string[] descriptionInteractionPlayerToOpponent;
+    public string[] story;//Określa Akapity history.
+    public string[] chapter;//Określa roźdizały historii
+    public string[] descritpionInteractions;//Okreśła opowieści interackji do oponenta z graczecz
+    public string[] descriptionInteractionPlayerToOpponent;//Okreśła opowiesci do iterakcji gracza z Oponentem
 }

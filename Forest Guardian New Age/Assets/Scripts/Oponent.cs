@@ -37,6 +37,11 @@ public class Oponent : MonoBehaviour
     {
         if (player.actuallyPosition >= location)
         {
+            /*Po zbliżeniu się gracza,oponnt wysyął swoje dane do story Managment(moze do innej funkcji,tóra zajmie się wyświetlenie się jego danych na Prawym Panelu)
+           Wysyła swoje imie do managmentstory,swoje id do itneraction i ustawia że gracz jest w ataku(z niewyjaśnionych przycyzn,ustawienie to nie działa) oraz ustawien zmienną
+           isSet,na tru by obciążyć Procesor.    
+            */
+            //---------------------------------------------------
             if (isSet == false)
             {
                 managment.oponentName = oponentName;
@@ -45,21 +50,32 @@ public class Oponent : MonoBehaviour
                 player.skills[0] = true;
                 isSet = true;
             }
+            //---------------------------------------------------
 
             Atack();
             Defense();
 
+            /*W przypadku Obrony,kiedy jest ustawiona,to sprawdza czy czas jest większy lub róny Czasowi do zmainy Decyzji;
+             * Jeżeli tak,to ją zmienia.
+             * tutaj nie ustawiamy nowej zmiennej,któa będzie okreslaął czas do zmiany decyzji,tylko po przez uwzgleninie parametru wantAtack
+             * "Przekierowywujemy" zmienną czas,na obliczanie czasu do zmiany Decyzji.
+             */
+            //---------------------------------------------------------
             if (time >= timeToChangeDecision && wantAtack == false)
             {
                 Decision();
             }
-
-            if(live == 0)
+            //---------------------------------------------------------
+            if (live == 0)
             {
                 Destroy(gameObject);
             }
 
             time += Time.deltaTime;
+        }
+        else
+        {
+            time = 0;
         }
 
     }
@@ -100,7 +116,7 @@ public class Oponent : MonoBehaviour
                 //----------------------------------
                 if (distanceAtack)
                 {
-                    if (player.skills[2])
+                    if (player.jumping)
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
                         Decision();
@@ -114,7 +130,7 @@ public class Oponent : MonoBehaviour
                 }
                 else if (closeAtack)
                 {
-                    if (player.skills[1])
+                    if (player.protectingOn)
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
                         Decision();
@@ -133,16 +149,16 @@ public class Oponent : MonoBehaviour
 
     void Defense()
     {
-        if (player.skills[0] && defense == false)
+        if (player.inAtack && defense == false)
         {
             //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
             live -= player.damange;
-            player.skills[0] = false;
+            player.inAtack = false;
         }
-        else if (player.skills[0] && defense)
+        else if (player.inAtack && defense)
         {
             //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
-            player.skills[0] = false;
+            player.inAtack = false;
         }
     }
 }

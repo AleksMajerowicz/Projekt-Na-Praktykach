@@ -20,10 +20,10 @@ public class Player : MonoBehaviour
     public int speedMoving;//Określa szybkość poruszania się golema
     [SerializeField]float speed;//określa predność golema.Ta zmienna w skrypcie,określa,po jakim czasie actuallyposition zmieni się
     public string seeOponentName;//określa,jakiego oponnenta widzi
-    //public bool inAtack;//bool sprawdzający,czy golem aktualnie atakuje?.Odpala sie w przyciskach ataku,a dezaktywuje w Opponencie
+    public bool inAtack;//bool sprawdzający,czy golem aktualnie atakuje?.Odpala sie w przyciskach ataku,a dezaktywuje w Opponencie
     public int damange;//Okreśła obraqżenia Golema
-    //public bool jumping;//Określa,czy gracz skoczył
-    //public bool protectingOn;//Okreśła czy Gracz broni sie
+    public bool jumping;//Określa,czy gracz skoczył
+    public bool protectingOn;//Okreśła czy Gracz broni sie
 
     public int[] timeToRest;//określa czas poszczególnych umiejetnosci,potrzebnych do zregenerowania się
     public int[] timneToReady;//określa aktualny czas odpoczynku poszczególnych umiejętności
@@ -82,6 +82,9 @@ public class Player : MonoBehaviour
         }
         //--------------------------------------------------------------------------------
 
+        /*Kiedy golem jest w ataku,to w tedy jest otwarty na zmieniane parametrów takich jak jumping czy ProtectingOn
+        Kiedy nie,to włączany jest Panel Poruszania sie gracza
+         */
         if (seeOponentName.Length > 0)
         {
             if (isMoving)
@@ -89,7 +92,7 @@ public class Player : MonoBehaviour
                 isMoving = false;
             }
 
-            if(skills[2])
+            if(jumping)
             {
                 //Ogarni�cie,�e po jakim� czasie,golem wyl�duje
             }
