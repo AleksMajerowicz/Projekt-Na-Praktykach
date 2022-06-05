@@ -4,7 +4,18 @@ using UnityEngine;
 public class ButtonFunctions : MonoBehaviour
 {
     [SerializeField] Player player;
+    [SerializeField] Interactions interactions;
+    [SerializeField] Story story;
     [SerializeField] GameObject [] buttons;
+
+    int[] timeToRest = new int[3];//okreœla czas poszczególnych umiejetnosci,potrzebnych do zregenerowania siê
+    int[] timneToReady = new int[3];//okreœla aktualny czas odpoczynku poszczególnych umiejêtnoœci
+    bool[] skills = new bool[3];//Okreœla umiejetnoœci: I(index 0)- atak, II(index 1)- Obrone i III-Skok(index 2)
+
+    private void Start()
+    {
+        CalibrationsParametrs();
+    }
 
     //Funkja ta,okreœ³a,czy Golem sie porusza.Dziêki temu ¿e jest uniwersalna,moza jej uzyæ w innej funkji oraz zatrzymaæ ni¹ golema
     //Dzieki zasotoswaniu negacji fucnkji ismoving,bo domyœlnie,w ideksie zerowym,jest przycisk Stop,a w idneksie drugim,przyciski:"idŸ w lewo" i "idŸ w prawo"
@@ -36,13 +47,26 @@ public class ButtonFunctions : MonoBehaviour
     //Wywo¹³nie np: PlayerDecision(Atack()) gdzie Atack() { return 1} 
     public void PlayerDecision(Player player,int index)
     {
-        if(player.timneToReady[index] >= player.timeToRest[index])
+        if(timneToReady[index -1] >= timeToRest[index-1])
         {
-            player.skills[index] = true;
+            skills[index-1] = true;
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent,false,0.5f,index-1);
         }
         else
         {
-            //odwo³¹nie sie do funkji wyœwietlajaca interakcje(lista interakcji gracza do opponenta[index])
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, false, 0.5f, index - 1/*Index odpoczynku*/);
         }
+    }
+
+    //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|
+    void CalibrationsParametrs()
+    {
+        skills[0] = player.atack;
+        skills[1] = player.protectingOn;
+        skills[2] = player.jumping;
+
+        timeToRest[0] = player.timeToRestAtack;
+        timeToRest[1] = player.timeToRestProtecting;
+        timeToRest[2] = player.timeToRestJumping;
     }
 }

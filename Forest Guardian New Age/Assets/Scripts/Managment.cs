@@ -8,6 +8,7 @@ public class Managment : MonoBehaviour
 
     [SerializeField] Player player;
     [SerializeField] Interactions interactions;
+    [SerializeField] Story story;
     [SerializeField] GameObject[] buttons;//Zawiera WSZYSTKIE przyciska,i te do chodzenia,funkjami I,II,III i IV formy Golema itd
 
     // Start is called before the first frame update
@@ -28,9 +29,9 @@ public class Managment : MonoBehaviour
         }
 
         //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ
-        if (player.inAtack && interactions.end == false)
+        if (player.inConfrontation && interactions.end == false)
         {
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], true, 0.1f);
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[buttons.Length -1],story.descritpionInteractions ,true, 0.1f,interactions.id);
         }
     }
 

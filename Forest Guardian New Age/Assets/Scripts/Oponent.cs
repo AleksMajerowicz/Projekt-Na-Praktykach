@@ -45,9 +45,8 @@ public class Oponent : MonoBehaviour
             if (isSet == false)
             {
                 managment.oponentName = oponentName;
-                player.seeOponentName = oponentName;//Tymczasowo!
                 interactions.id = id;
-                player.skills[0] = true;
+                player.inConfrontation = true;
                 isSet = true;
             }
             //---------------------------------------------------
@@ -149,16 +148,16 @@ public class Oponent : MonoBehaviour
 
     void Defense()
     {
-        if (player.inAtack && defense == false)
+        if (player.atack && defense == false)
         {
             //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
             live -= player.damange;
-            player.inAtack = false;
+            player.atack = false;
         }
-        else if (player.inAtack && defense)
+        else if (player.atack && defense)
         {
             //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
-            player.inAtack = false;
+            player.atack = false;
         }
     }
 }

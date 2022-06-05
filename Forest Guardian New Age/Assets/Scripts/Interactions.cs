@@ -98,29 +98,36 @@ public class Interactions : MonoBehaviour
     * który zawiera "Co robisz?".
     * Po wypisaniu tego,dzięki zastosowaniu kolejności wykonywania linijek,ze wzgledu że id == długości tablicy,to jest wyświetlany danego Panelu Interakcji.
     * Pozwoli to tez na jej wyłaczenie,keidy zasotsujemy Ucieczkę,jak i bez koniecnzości większej ilości funckji,kontynuwanie gry
+    * Argumenty interactionsToActive i interactnionToDeactive to obiekty które będą aktywowanie i dezaktywowane,
+    * lista stringów jako argument pozwala na odowałanai się do zmiennej opis interacji i opis interakcji gracza do opponenta,w jednej funckji
+    * boll jest aktywny określa prawdepowiedziazy,od czego zaczynamy,czy od wyłączania panelu czy właczania?,
+    * t okreśła czas wyswietlania się napisów
+    * a id określa id oponenta,jak i umiejętności
+    * |Naprawić tak,by można się było odołąć do koncowego indexu,mając ten argument funckji: id|
     */
 
-    public void ManagmentInteraction(GameObject interactions, bool isActive, float t)
+    public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t, int id)
     {
         if (end == false)
         {
+            interactionsToDeactive.SetActive(!isActive);
             if (time >= t)
             {
                 time = 0;
-                tekstDescritpion.text = story.descritpionInteractions[id - 1].Substring(0, textIndex);
+                tekstDescritpion.text = story[id - 1].Substring(0, textIndex);
                 textIndex++;
             }
 
-            if (textIndex > story.descritpionInteractions[id - 1].Length)
+            if (textIndex > story[id - 1].Length)
             {
                 time = 0;
-                if (id == story.descritpionInteractions.Length)
+                if (id == story.Length)
                 {
-                    interactions.SetActive(isActive);
+                    interactionsToActive.SetActive(isActive);
                     end = true;
                 }
                 textIndex = 0;
-                id = story.descritpionInteractions.Length;
+                id = story.Length;
             }
 
             time += Time.deltaTime;
