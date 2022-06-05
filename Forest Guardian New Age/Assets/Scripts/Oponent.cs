@@ -35,8 +35,14 @@ public class Oponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (player.actuallyPosition >= location)
         {
+            /*Po zbliżeniu się gracza,oponnt wysyął swoje dane do story Managment(moze do innej funkcji,tóra zajmie się wyświetlenie się jego danych na Prawym Panelu)
+            Wysyła swoje imie do managmentstory,swoje id do itneraction i ustawia że gracz jest w ataku(z niewyjaśnionych przycyzn,ustawienie to nie działa) oraz ustawien zmienną
+            isSet,na tru by obciążyć Procesor.    
+             */
+            //---------------------------------------------------
             if (isSet == false)
             {
                 managment.oponentName = oponentName;
@@ -45,21 +51,32 @@ public class Oponent : MonoBehaviour
                 player.inAtack = true;
                 isSet = true;
             }
+            //----------------------------------------------------
 
             Atack();
             Defense();
 
+            /*W przypadku Obrony,kiedy jest ustawiona,to sprawdza czy czas jest większy lub róny Czasowi do zmainy Decyzji;
+             * Jeżeli tak,to ją zmienia.
+             * tutaj nie ustawiamy nowej zmiennej,któa będzie okreslaął czas do zmiany decyzji,tylko po przez uwzgleninie parametru wantAtack
+             * "Przekierowywujemy" zmienną czas,na obliczanie czasu do zmiany Decyzji.
+             */
+            //---------------------------------------------------------
             if (time >= timeToChangeDecision && wantAtack == false)
             {
                 Decision();
             }
-
+            //-----------------------------------------------------------
             if(live == 0)
             {
                 Destroy(gameObject);
             }
 
             time += Time.deltaTime;
+        }
+        else
+        {
+            time = 0;
         }
 
     }
@@ -88,12 +105,14 @@ public class Oponent : MonoBehaviour
 
         Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
     }
-
+    /*Funkcja Atack
+     Kiedy Oponent chce zaatakować,sprawdzane jest,czy czas jest większy lub róny czasowi do zadania obrażeń.Jeżeli tak,to w zalezności od tego,czy gracz szkoczył
+     czy postanowił się ronić,dostanie obrażenie,lub nie.Po ataku następuje podjecie kolejnej decyzji,przez oponenta.
+     */
     void Atack()
     {
         if (wantAtack)
         {
-            time = 0;
             if (time >= timeToGiveDamange)
             {
                 //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji
@@ -103,13 +122,13 @@ public class Oponent : MonoBehaviour
                     if (player.jumping)
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                     else
                     {
                         //Zrobienie coś,że pojawi się informacja,że gracz dostał
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                 }
                 else if (closeAtack)
@@ -117,13 +136,13 @@ public class Oponent : MonoBehaviour
                     if (player.protectingOn)
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                     else
                     {
                         //Zrobienie coś,że pojawi się informacja,że gracz dostał
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+                        Decision();
                     }
                 }
                 //---------------------------------------

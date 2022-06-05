@@ -4,9 +4,10 @@ using UnityEngine;
 public class ButtonFunctions : MonoBehaviour
 {
     [SerializeField] Player player;
-    [SerializeField] GameObject [] buttons;
+    [SerializeField] GameObject [] buttons;//Okreœ³a przyciski
 
     //Funkja ta,okreœ³a,czy Golem sie porusza.Dziêki temu ¿e jest uniwersalna,moza jej uzyæ w innej funkji oraz zatrzymaæ ni¹ golema
+    //Dzieki zasotoswaniu negacji fucnkji ismoving,bo domyœlnie,w ideksie zerowym,jest przycisk Stop,a w idneksie drugim,przyciski:"idŸ w lewo" i "idŸ w prawo"
     void managmentMoving(bool moving)
     {
         player.isMoving = moving;

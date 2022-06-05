@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         listaPasków[aktualnaForma - 1].value = iloscSwiatla[aktualnaForma - 1];
         //Uniwersalny skrypt,zmiany formy golema
         //-------------------------------------------------------------------------------
@@ -77,7 +78,10 @@ public class Player : MonoBehaviour
         }
         //--------------------------------------------------------------------------------
 
-        if (seeOponentName.Length > 0)
+        /*Kiedy golem jest w ataku,to w tedy jest otwarty na zmieniane parametrów takich jak jumping czy ProtectingOn
+        Kiedy nie,to włączany jest Panel Poruszania sie gracza
+         */
+        if (inAtack)
         {
             if (isMoving)
             {
@@ -89,7 +93,7 @@ public class Player : MonoBehaviour
                 //Ogarni�cie,�e po jakim� czasie,golem wyl�duje
             }
         }
-        else if(seeOponentName.Length == 0)
+        else
         {
             MovingManagment();
         }

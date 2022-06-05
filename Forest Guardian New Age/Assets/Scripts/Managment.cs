@@ -22,6 +22,14 @@ public class Managment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //---------------------------------------------
+        if (player.isMoving && interactions.end == false)
+        {
+            //Określić funckej w Interactions,do zarządzania chodzeniem,która będzie wyświetlałą też informacje,o tym,że np: Golem wyszedł z lasu.Ta funckja ma sie wyświetlić raz
+        }
+        //--------------------------------------------
+
+        //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ
         if(player.inAtack && interactions.end == false)
         {
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], true,0.1f);
