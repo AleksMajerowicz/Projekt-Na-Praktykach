@@ -28,7 +28,8 @@ public class Player : MonoBehaviour
     public int timeToRestProtecting;//Okrełśa czas odpoczynku potrzebnego do ponownej obron.W skrypcie okreśła czas potrzebny do możliwości ponownej obrony
     public int timeToRestJumping;//Określa czas odpoczynku do ponownego skoku.Określa czas potrzebny do możliwości wybrania skoku
 
-    float timeMoving, timeToReadyAtack;//Czas chodzenia-okresala aktalny czas chodzenia gracza, Czad gotowości do ataku-okresla aktualny czas.Nie jestem epwien czy to smao zorbić do obrony i skoku.
+    float timeMoving;
+    public float timeToReadyAtack, timeToReadyProtecting, timeToReadyJumping;//Czas chodzenia-okresala aktalny czas chodzenia gracza, Czas gotowości do ataku-okresla aktualny czas, Czas goowości do Obrony-Okresla aktualny czas, Czas gotowości do Skoku-Określa aktualny czas
 
     // Start is called before the first frame update
     void Start()
@@ -87,6 +88,8 @@ public class Player : MonoBehaviour
             {
                 //Ogarni�cie,�e po jakim� czasie,golem wyl�duje
             }
+
+            CalculatingSkillsTime();
         }
         else
         {
@@ -107,5 +110,12 @@ public class Player : MonoBehaviour
 
             timeMoving += Time.deltaTime;
         }
+    }
+
+    void CalculatingSkillsTime()
+    {
+        timeToReadyAtack += Time.deltaTime;
+        timeToReadyProtecting += Time.deltaTime;
+        timeToReadyJumping += Time.deltaTime;
     }
 }

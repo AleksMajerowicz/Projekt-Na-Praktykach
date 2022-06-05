@@ -9,7 +9,7 @@ public class ButtonFunctions : MonoBehaviour
     [SerializeField] GameObject [] buttons;
 
     int[] timeToRest = new int[3];//okreœla czas poszczególnych umiejetnosci,potrzebnych do zregenerowania siê
-    int[] timneToReady = new int[3];//okreœla aktualny czas odpoczynku poszczególnych umiejêtnoœci
+    float[] timneToReady = new float[3];//okreœla aktualny czas odpoczynku poszczególnych umiejêtnoœci
     bool[] skills = new bool[3];//Okreœla umiejetnoœci: I(index 0)- atak, II(index 1)- Obrone i III-Skok(index 2)
 
     private void Start()
@@ -47,6 +47,8 @@ public class ButtonFunctions : MonoBehaviour
     //Wywo¹³nie np: PlayerDecision(Atack()) gdzie Atack() { return 1} 
     public void PlayerDecision(Player player,int index)
     {
+        CalibrationsParametrs();
+
         if(timneToReady[index -1] >= timeToRest[index-1])
         {
             skills[index-1] = true;
@@ -61,12 +63,10 @@ public class ButtonFunctions : MonoBehaviour
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|
     void CalibrationsParametrs()
     {
-        skills[0] = player.atack;
-        skills[1] = player.protectingOn;
-        skills[2] = player.jumping;
+        skills = new bool[3] { player.atack, player.protectingOn, player.jumping };
 
-        timeToRest[0] = player.timeToRestAtack;
-        timeToRest[1] = player.timeToRestProtecting;
-        timeToRest[2] = player.timeToRestJumping;
+        timeToRest = new int[3] { player.timeToRestAtack, player.timeToRestProtecting, player.timeToRestJumping };
+
+        timneToReady = new float[3] {player.timeToReadyAtack, player.timeToReadyProtecting, player.timeToReadyJumping};
     }
 }
