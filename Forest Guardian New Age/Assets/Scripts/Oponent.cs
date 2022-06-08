@@ -35,7 +35,8 @@ public class Oponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.actuallyPosition >= location)
+        //Dzięki zastosowaniu sprawdznaiu,czy jest koniec opowieści,unikamy sytacji gdzie gracz,czytajac dalsza częśc opwoieści,dosatej obrażenia
+        if (player.actuallyPosition >= location && interactions.endStory)
         {
             /*Po zbliżeniu się gracza,oponnt wysyął swoje dane do story Managment(moze do innej funkcji,tóra zajmie się wyświetlenie się jego danych na Prawym Panelu)
            Wysyła swoje imie do managmentstory,swoje id do itneraction i ustawia że gracz jest w ataku(z niewyjaśnionych przycyzn,ustawienie to nie działa) oraz ustawien zmienną
@@ -46,6 +47,7 @@ public class Oponent : MonoBehaviour
             {
                 managment.oponentName = oponentName;
                 interactions.id = id;
+                interactions.endInteractions = false;
                 player.inConfrontation = true;
                 isSet = true;
             }

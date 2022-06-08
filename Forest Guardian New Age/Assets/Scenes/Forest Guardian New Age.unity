@@ -234,6 +234,8 @@ MonoBehaviour:
   buttons:
   - {fileID: 1809217139}
   - {fileID: 1701533104}
+  needValuesToStory: 010000001400000064000000
+  curretValuesToStorry: 000000000000000000000000
 --- !u!114 &128446287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,6 +1532,9 @@ MonoBehaviour:
   timeToRestAtack: 0
   timeToRestProtecting: 0
   timeToRestJumping: 0
+  timeToReadyAtack: 0
+  timeToReadyProtecting: 0
+  timeToReadyJumping: 0
 --- !u!4 &1025677970
 Transform:
   m_ObjectHideFlags: 0
@@ -2884,7 +2889,8 @@ MonoBehaviour:
   player: {fileID: 1025677969}
   managment: {fileID: 128446286}
   story: {fileID: 11400000, guid: 4d6ef60dae5d6d54fa79e171050ca943, type: 2}
-  end: 0
+  endStory: 0
+  endInteractions: 0
   id: 0
 --- !u!1 &1930936462
 GameObject:

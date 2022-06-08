@@ -12,23 +12,20 @@ public class Interactions : MonoBehaviour
     [SerializeField] Managment managment;
     [SerializeField] Story story;
 
-
-    [SerializeField] string[,] storyBook;//Tworzy "Książkę"
     //[SerializeField] coś[] action;
 
     int indexS, textIndex,actuallyChapter;//Index Interakcji,Indeks Opowiści-Odwołuje się do Indexu opowiści,textIndex-Zmienna któa przechowuje idnex neizbedny do wyswietlania tekstu,aktualny rozdział-okresla aktualny rozdział,dzięki temu skrypt jest uniwersalny
     float time;
 
-    public bool end;//Okreśła koniec pisanen opowieści,dzięki temu w Managment jest możliwe zablokowanie,powtarzanie się opowieści
+    public bool endStory;//Okreśła koniec pisanen opowieści,dzięki temu w Managment jest możliwe zablokowanie,powtarzanie się opowieści
+    public bool endInteractions;
 
     public int id;//określa id opponenta.Dzięki temu,możliwe jest uniwersalne odwołąnie się,do poszczególnych indeksów Opisu interakcji
 
     // Start is called before the first frame update
     void Start()
     {
-        //WARRING! Ogarnąć skrypt na wczytywanie,funckja ta BAARDZo spowalnia ładowanie
-        CreateBook();
-        end = false;
+        endInteractions = true;
         indexS = 0;
         textIndex = 0;
         actuallyChapter = 1;
@@ -36,23 +33,7 @@ public class Interactions : MonoBehaviour
         tekstDescritpion.text = null;
         time = 0;
     }
-
-    private void Update()
-    {
-        //DisplayStory(actuallyChapter - 1, storyBook, 0.1f);
-    }
-    /*Funckja Create Book
-     "Tworzy książke",łącyz zmeine Rozdizał i opowieść na taką książkę wirtualną
-    Dzięki temu w Skrycpe DisplayStory możliwe jest uniwersalne wyswietlanie chistoi
-    to znaczy,zmeiniasz tylko zmienną "Aktrualny Rozdział",wywołujesz funckej,i gotowe :3*/
-    void CreateBook()
-    {
-        storyBook = new string[story.chapter.Length, story.story.Length];
-        storyBook[0, 0] = story.story[0];
-        storyBook[0, 1] = story.story[1];
-        storyBook[1, 0] = story.story[2];
-        storyBook[1, 1] = story.story[3];
-    }
+    
     /*Funkcja DisplayStory
      Wyświetla Historie
     Pobeira zmienną rozdział,książkę oraz czas w jakim będzie to wyswietlane
@@ -64,7 +45,7 @@ public class Interactions : MonoBehaviour
     potem jest klasyczna pętla spowalniająca*/
     public void DisplayStory(int chapter,string[,] book, float t)
     {
-        if (end == false)
+        if (endStory == false)
         {
             if (book[chapter, indexS] != null)
             {
@@ -85,7 +66,7 @@ public class Interactions : MonoBehaviour
             else
             {
                 actuallyChapter++;
-                end = true;
+                endStory = true;
             }
         }
     }
@@ -106,11 +87,12 @@ public class Interactions : MonoBehaviour
     * |Naprawić tak,by można się było odołąć do koncowego indexu,mając ten argument funckji: id|
     */
 
-    public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t, int id)
+    public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t)
     {
-        if (end == false)
+        if (endInteractions == false && endStory)
         {
             interactionsToDeactive.SetActive(!isActive);
+
             if (time >= t)
             {
                 time = 0;
@@ -118,13 +100,15 @@ public class Interactions : MonoBehaviour
                 textIndex++;
             }
 
+            //Write(story, t);
+
             if (textIndex > story[id - 1].Length)
             {
                 time = 0;
                 if (id == story.Length)
                 {
                     interactionsToActive.SetActive(isActive);
-                    end = true;
+                    endInteractions = true;
                 }
                 textIndex = 0;
                 id = story.Length;
@@ -134,7 +118,17 @@ public class Interactions : MonoBehaviour
         }
         else
         {
-            end = true;
+            endInteractions = true;
+        }
+    }
+
+    public void Write(string[] story,float t)
+    {
+        if (time >= t)
+        {
+            time = 0;
+            tekstDescritpion.text = story[id - 1].Substring(0, textIndex);
+            textIndex++;
         }
     }
     /*public void DisplayInteraction(string[] dA)

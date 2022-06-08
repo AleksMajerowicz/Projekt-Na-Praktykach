@@ -44,20 +44,26 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     //Zrobiæ funckje osobne dla Taku, Obrony itp,które zwracaj¹wartoœc do,jako argument funckji PlayerDecision
-    //Wywo¹³nie np: PlayerDecision(Atack()) gdzie Atack() { return 1} 
-    public void PlayerDecision(Player player,int index)
+    public void PlayerDecision(int index)
     {
         CalibrationsParametrs();
 
-        if(timneToReady[index -1] >= timeToRest[index-1])
+        if(timneToReady[index - 1] >= timeToRest[index-1])
         {
-            skills[index-1] = true;
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent,false,0.5f,index-1);
+            skills[index - 1] = true;
+            interactions.id = index;
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent,false,0.5f);
         }
         else
         {
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, false, 0.5f, index - 1/*Index odpoczynku*/);
+            interactions.id = index;//Indek odpoczynku
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, false, 0.5f);
         }
+    }
+
+    public void Atack()
+    {
+        PlayerDecision(1);
     }
 
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|
