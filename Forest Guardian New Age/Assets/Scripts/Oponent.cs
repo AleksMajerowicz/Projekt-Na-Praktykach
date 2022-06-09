@@ -24,12 +24,16 @@ public class Oponent : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Interactions interactions;
     [SerializeField] Managment managment;
+    [SerializeField] Story story;
+
+    [Header("Do Opowieści")]
+    public string[] textOpponentInteractions;//Zawiera Interakcje Oponenta.Dizęki temu,można dynamicznie zmieniać zmienną descritpionInteractions
 
     private void Start()
     {
         wantAtack = false;
+        defense = false;
         isSet = false;
-        Draws(Random.Range(1f, 20f),Random.Range(30f,300f));
     }
 
     // Update is called once per frame
@@ -46,10 +50,16 @@ public class Oponent : MonoBehaviour
             if (isSet == false)
             {
                 managment.oponentName = oponentName;
-                interactions.id = id;
+                interactions.id = 1;
+                for(int i = 0; i < textOpponentInteractions.Length; i++)
+                {
+                    story.descritpionInteractions[i] = textOpponentInteractions[i];
+                }
                 interactions.endInteractions = false;
                 player.inConfrontation = true;
+                interactions.endInteractions = false;
                 isSet = true;
+                Decision();
             }
             //---------------------------------------------------
 
@@ -74,6 +84,11 @@ public class Oponent : MonoBehaviour
             
             if (live == 0)
             {
+                managment.diededMolochs += 1;
+                interactions.id = 4;
+                interactions.endInteractions = false;
+                managment.isOpponentDoSomething = false;
+                managment.oponentName = null;
                 Destroy(gameObject);
             }
 
@@ -81,6 +96,10 @@ public class Oponent : MonoBehaviour
         }
         else
         {
+            //interactions.id = 5;
+            //interactions.endInteractions = false;
+            //managment.isOpponentDoSomething = false;
+            //managment.oponentName = null; zrobić łądną funckje do tego :3
             time = 0;
             isSet = false;
         }
@@ -104,15 +123,15 @@ public class Oponent : MonoBehaviour
     Po podjhęciu decyzji,znów losuje czas,w celu dynamicnzości Przeciwnika(coś jak AI)*/
     void Decision()
     {
-        int decison = Random.Range(1, 2);
+        int decison = 0;//Random.Range(2, 2);
         wantAtack = false;
         defense = false;
 
-        if (decison == 1)
+        if (decison%2 == 0)
         {
             wantAtack = true;
         }
-        else if (decison == 2)
+        else
         {
             defense = true;
         }
@@ -136,12 +155,14 @@ public class Oponent : MonoBehaviour
                 {
                     if (player.skills["Jumping"])
                     {
-                        //Zrobienie coś,że pojawi się informacja,że misną
+                        //Zrobienie coś,że pojawi się informacja,że misną   
                         Decision();
                     }
                     else
                     {
-                        //Zrobienie coś,że pojawi się informacja,że gracz dostał
+                        interactions.id = 3;//*Zrobić funckej ustawiajacą poszczególne parametry
+                        interactions.endInteractions = false;
+                        player.isHit = true;
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
                         Decision();
                     }
@@ -155,7 +176,9 @@ public class Oponent : MonoBehaviour
                     }
                     else
                     {
-                        //Zrobienie coś,że pojawi się informacja,że gracz dostał
+                        interactions.id = 3;
+                        interactions.endInteractions = false;
+                        player.isHit = true;
                         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
                         Decision();
                     }
@@ -188,7 +211,6 @@ public class Oponent : MonoBehaviour
         live -= player.damange;
         player.skills["Atack"] = false;
 
-        managment.diededMolochs += 1;
         managment.ToStory(1, managment.diededMolochs);
     }
 }

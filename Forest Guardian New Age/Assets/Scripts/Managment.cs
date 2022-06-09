@@ -18,10 +18,12 @@ public class Managment : MonoBehaviour
 
     //Do przyszłęgo skryptu na zarządzanie umiejętnościami
     public int diededMolochs;
+    public bool isOpponentDoSomething;//Określa,czy fucnkaj ogarnia,ze widza się i że nietrzeba o tym jeszcze raz informować
     // Start is called before the first frame update
     void Start()
     {
         chapter = 0;
+        isOpponentDoSomething = false;
 
         CreateBook();
         ToStory(0,1);
@@ -30,7 +32,6 @@ public class Managment : MonoBehaviour
         {
             if(i != buttons.Length - 2)
             {
-                Debug.Log(i);
                 buttons[i].SetActive(false);
             }
             else
@@ -45,6 +46,7 @@ public class Managment : MonoBehaviour
     {
         if (interactions.endStory == false)
         {
+
             FindActiveButton();
             interactions.DisplayStory(activeButton, false, chapter, storyBook, 0.1f);
             chapter++;
@@ -54,6 +56,8 @@ public class Managment : MonoBehaviour
         //------------------------------------------------------------------
         if (player.isMoving == false && player.inConfrontation == false)
         {
+            FindActiveButton();//*
+            activeButton.SetActive(false);//*
             buttons[1].SetActive(true);
         }
         //-------------------------------------------------------------------
@@ -64,9 +68,25 @@ public class Managment : MonoBehaviour
         }
 
         //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ,a dzieki zastosowaniu drugiego argumentu,to w tedy,jakby...resetujemy,co pozwala ponownie wrócić z opowieści
-        if (player.inConfrontation && interactions.endStory == false)
+        if (player.inConfrontation && interactions.endStory && isOpponentDoSomething == false)
         {
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
+        }
+
+        if(player.isHit)
+        {
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
+        }
+
+        if(player.skills["Jumping"] && isOpponentDoSomething && player.onGround)
+        {
+            interactions.id = 3;
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
+        }
+        else if(player.skills["Jumping"] == false && isOpponentDoSomething && player.onGround == false)
+        {
+            interactions.id = 4;
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
         }
     }
 
@@ -100,7 +120,7 @@ public class Managment : MonoBehaviour
 
             if(curretValuesToStorry[chapter] == needValuesToStory[chapter])
             {
-                interactions.endStory = false;
+                interactions.endStory = true;
             }
         }
     }

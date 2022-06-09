@@ -5,6 +5,7 @@ public class ButtonFunctions : MonoBehaviour
 {
     [SerializeField] Player player;
     [SerializeField] Interactions interactions;
+    [SerializeField] Managment managment;
     [SerializeField] Story story;
     [SerializeField] GameObject [] buttons;
 
@@ -22,8 +23,9 @@ public class ButtonFunctions : MonoBehaviour
     void managmentMoving(bool moving)
     {
         player.isMoving = moving;
-        buttons[0].SetActive(moving);
-        buttons[1].SetActive(!moving);
+        buttons[buttons.Length - 1].SetActive(moving);
+        buttons[buttons.Length-2].SetActive(!moving);
+        interactions.Repeat(" ", true);
     }
     //Ta funkcja odpowiada sie za w³aczenie petli porusania siê gracza w lewo
     public void leftMoving()
@@ -71,16 +73,16 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void ProtectingOn()
     {
-        PlayerDecision(2);
+        //PlayerDecision(2);
     }
     public void Jumping()
     {
-        PlayerDecision(3);
+        //PlayerDecision(3);
     }
     public void RunAway()
     {
-        player.actuallyPosition -= 5;
-        interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length-2], story.descriptionInteractionPlayerToOpponent, false, 0.5f);
+        //player.actuallyPosition -= 5;
+        //interactions.id = 5;
     }
 
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|

@@ -43,13 +43,14 @@ public class Interactions : MonoBehaviour
     któa sprawdza czy index tekstu jest więskzy od dłuiści "akapitu"
     jeżeli tak,to lecimy do następnego akapitu,zerujemy index tekstu
     potem jest klasyczna pętla spowalniająca*/
+    //--------------------------------------------------------------------------------------------------
     public void DisplayStory(GameObject button,bool isActive,int chapter,string[,] book, float t)
     {
         if (endStory == false)
         {
-            button.SetActive(isActive);
-
-            if (!(book[chapter, indexS] == null))
+            //button.SetActive(isActive);
+            
+            if (book[chapter,indexS] != null)
             {
                 if (textIndex > book[chapter,indexS].Length)
                 {
@@ -59,7 +60,6 @@ public class Interactions : MonoBehaviour
 
                 if (time >= t)
                 {
-                    Debug.Log("ok");
                     time = 0;
                     tekstDescritpion.text = book[chapter,indexS].Substring(0, textIndex);
                     textIndex++;
@@ -75,6 +75,7 @@ public class Interactions : MonoBehaviour
             }
         }
     }
+    //--------------------------------------------------------------------------------------------------
 
     /*Funkcja ManagmentInteractions
     * Jest podobna w działaniu do Funkcji DisplayStory,bo też Wyświetla "Opowieść"
@@ -91,7 +92,7 @@ public class Interactions : MonoBehaviour
     * a id określa id oponenta,jak i umiejętności
     * |Naprawić tak,by można się było odołąć do koncowego indexu,mając ten argument funckji: id|
     */
-
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t)
     {
         if (endInteractions == false && endStory)
@@ -119,16 +120,38 @@ public class Interactions : MonoBehaviour
                 id = story.Length;
             }
 
-            //time += Time.deltaTime;
+            time += Time.deltaTime;
         }
         else
         {
             endInteractions = true;
+            //Do spojrzena na nowo!
+            //------------------------------------------------------------------------------------------------
+            if (player.inConfrontation && managment.isOpponentDoSomething == false && managment.oponentName == null)
+            {
+                player.inConfrontation = false;
+            }
+            else if(player.inConfrontation && managment.isOpponentDoSomething == false && managment.oponentName != null)
+            {
+                managment.isOpponentDoSomething = true;
+            }
+
+            if (player.skills["Jumping"])
+            {
+                player.onGround = false;
+            }
+            else if (player.skills["Jumping"] == false)
+            {
+                player.onGround = true;
+            }
+            //-------------------------------------------------------------------------------------------------
         }
     }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     /*Funkcja Write
      Pisze,to co podamy jako Argument typu stirng,w danym czasie.*/
+    //------------------------------------------------------------------------
     public void Write(string text,float t)
     {
         if (time >= t)
@@ -139,17 +162,20 @@ public class Interactions : MonoBehaviour
         }
         time += Time.deltaTime;
     }
+    //------------------------------------------------------------------------
 
     /*Funckja Repeat
      Resetuje,po to,by na nowo powtarzac napis,ale nie zawsze*/
-    public void Repeat(string text)
+    //----------------------------------------------------------
+    public void Repeat(string text,bool now)
     {
-        if (shortTextIndex >= text.Length)
+        if (shortTextIndex >= text.Length || now)
         {
             tekstDescritpion.text = "";
             shortTextIndex = 0;
         }
     }
+    //----------------------------------------------------------
     /*public void DisplayInteraction(string[] dA)
     {
         if (end == false)

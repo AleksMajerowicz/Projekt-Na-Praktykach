@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public string seeOponentName;//określa,jakiego oponnenta widzi
     public bool inConfrontation;//Okresla,czy Golem jest w konfrontacji z Opponentem
 
-    public Dictionary<string, bool> skills= new Dictionary<string, bool>();//Określa Skille.Jest to w Dictonary w celu uporzadkowania kodu,żeby był bardzije czytelny :3
+    [SerializeField]public Dictionary<string, bool> skills= new Dictionary<string, bool>();//Określa Skille.Jest to w Dictonary w celu uporzadkowania kodu,żeby był bardzije czytelny :3
     public int damange;//Okreśła obraqżenia Golema
 
     public int timeToRestAtack;//Okresla czas odpoczyn potrzebnego do ponownego zaatakowania.W skrycpie okrełsa czas potrzebny do możliwości ponownego ataku
@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
 
     float timeMoving;//Czas chodzenia-okresala aktalny czas chodzenia gracza
     public Dictionary<string, float> timneToReady = new Dictionary<string, float>();
+
+    public bool isHit, onGround;
+    float gravity,timeGravity;//*
     // Start is called before the first frame update
     void Start()
     {
@@ -44,8 +47,11 @@ public class Player : MonoBehaviour
         timneToReady.Add("TimeToReadyJumping", 0);//Czas gotowości do Skoku-Określa aktualny czas
 
         isMoving = false;
+        isHit = false;
+        onGround = true;
 
         aktualnaForma = 1;
+        gravity = 2.5f;
 
         for (int i = 0; i < listaPasków.Length; i++)
         {
@@ -59,11 +65,14 @@ public class Player : MonoBehaviour
             listaPasków[i].gameObject.SetActive(false);
         }
 
+        ManagmentHPBarsPlayer();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        Debug.Log(skills["ProtectingOn"]);
 
         /*Kiedy golem jest w konfrontacji,to w tedy jest otwarty na zmieniane parametrów takich jak jumping czy ProtectingOn
         Kiedy nie,to włączany jest Panel Poruszania sie gracza
@@ -75,6 +84,17 @@ public class Player : MonoBehaviour
             if (isMoving)
             {
                 isMoving = false;
+            }
+
+            if(skills["Jumping"])
+            {
+                if(timeGravity > gravity && interactions.endInteractions == false)
+                {
+                    skills["Jumping"] = false;
+                    timeGravity = 0;//*
+                    Debug.Log("ok");
+                }
+                timeGravity += Time.deltaTime;
             }
             
             CalculatingSkillsTime();
@@ -114,7 +134,7 @@ public class Player : MonoBehaviour
         if (isMoving)
         {
             interactions.Write("Idziesz.....", 0.25f);
-            interactions.Repeat("Idziesz.....");
+            interactions.Repeat("Idziesz.....",false);
 
             //Okresla po jakim czasie(speed) gracz stawi krok(speedMoving)
             //-----------------------------------
