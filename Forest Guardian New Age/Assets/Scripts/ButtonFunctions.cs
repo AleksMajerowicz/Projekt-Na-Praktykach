@@ -9,8 +9,8 @@ public class ButtonFunctions : MonoBehaviour
     [SerializeField] GameObject [] buttons;
 
     int[] timeToRest = new int[3];//okreœla czas poszczególnych umiejetnosci,potrzebnych do zregenerowania siê
-    float[] timneToReady = new float[3];//okreœla aktualny czas odpoczynku poszczególnych umiejêtnoœci
-    bool[] skills = new bool[3];//Okreœla umiejetnoœci: I(index 0)- atak, II(index 1)- Obrone i III-Skok(index 2)
+    string[] timneToReady = new string[3];//okreœla nazwy aktólanych czasów odpoczynku poszczególnych umiejêtnoœci
+    string[] playerSkills = new string[3];//Okreœla nazwy
 
     private void Start()
     {
@@ -48,31 +48,48 @@ public class ButtonFunctions : MonoBehaviour
     {
         CalibrationsParametrs();
 
-        if(timneToReady[index - 1] >= timeToRest[index-1])
+        interactions.endInteractions = false;
+
+        if (player.timneToReady[timneToReady[index - 1]] >= timeToRest[index-1])
         {
-            skills[index - 1] = true;
+            player.skills[playerSkills[index - 1]] = true;
+            player.timneToReady[timneToReady[index - 1]] = 0;
             interactions.id = index;
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent,false,0.5f);
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent, false,0.5f);
         }
         else
         {
             interactions.id = index;//Indek odpoczynku
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, false, 0.5f);
         }
+
     }
 
     public void Atack()
     {
         PlayerDecision(1);
     }
+    public void ProtectingOn()
+    {
+        PlayerDecision(2);
+    }
+    public void Jumping()
+    {
+        PlayerDecision(3);
+    }
+    public void RunAway()
+    {
+        player.actuallyPosition -= 5;
+        interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length-2], story.descriptionInteractionPlayerToOpponent, false, 0.5f);
+    }
 
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|
     void CalibrationsParametrs()
     {
-        skills = new bool[3] { player.atack, player.protectingOn, player.jumping };
+        playerSkills = new string[3] { "Atack", "ProtectingOn", "Jumping" };
 
         timeToRest = new int[3] { player.timeToRestAtack, player.timeToRestProtecting, player.timeToRestJumping };
 
-        timneToReady = new float[3] {player.timeToReadyAtack, player.timeToReadyProtecting, player.timeToReadyJumping};
+        timneToReady = new string[3] { "TimeToReadyAtack", "TimeToReadyProtecting", "TimeToReadyJumping" };
     }
 }

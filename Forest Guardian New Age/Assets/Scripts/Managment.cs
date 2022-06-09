@@ -10,41 +10,64 @@ public class Managment : MonoBehaviour
     [SerializeField] Interactions interactions;
     [SerializeField] Story story;
     [SerializeField] GameObject[] buttons;//Zawiera WSZYSTKIE przyciska,i te do chodzenia,funkjami I,II,III i IV formy Golema itd
+    public GameObject activeButton;
 
     [SerializeField] string[,] storyBook;//Tworzy "Książkę"
     int chapter;//Określa aktualny rozdział
     [SerializeField]int[] needValuesToStory, curretValuesToStorry;// Potrzebne wartości do Opowieści-określa wartości,które są neizbędne by opowieśc rusyzła dalej, aktualne Wartosci do Opowieści-Określa aktualne nparametry do opowieści
 
+    //Do przyszłęgo skryptu na zarządzanie umiejętnościami
+    public int diededMolochs;
     // Start is called before the first frame update
     void Start()
     {
+        chapter = 0;
+
         CreateBook();
         ToStory(0,1);
 
-        chapter = 0;
-
         for(int i = 0; i < buttons.Length; i++)
         {
-            buttons[i].SetActive(false);
+            if(i != buttons.Length - 2)
+            {
+                Debug.Log(i);
+                buttons[i].SetActive(false);
+            }
+            else
+            {
+                buttons[i].SetActive(true);
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-            interactions.DisplayStory(chapter,storyBook,0.1f);
+        if (interactions.endStory == false)
+        {
+            FindActiveButton();
+            interactions.DisplayStory(activeButton, false, chapter, storyBook, 0.1f);
+            chapter++;
+        }
 
-        
-            if (player.isMoving)
-            {
-                //Określić funckej w Interactions,do zarządzania chodzeniem,która będzie wyświetlałą też informacje,o tym,że np: Golem wyszedł z lasu.Ta funckja ma sie wyświetlić raz
-            }
+        //To okreśła,ze keidy się nic niedzije,to włącza mozliwosc poruszania si
+        //------------------------------------------------------------------
+        if (player.isMoving == false && player.inConfrontation == false)
+        {
+            buttons[1].SetActive(true);
+        }
+        //-------------------------------------------------------------------
 
-            //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ
-            if (player.inConfrontation)
-            {
-                interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
-            }
+        if (player.isMoving)
+        {
+            //Określić funckej w Interactions,do zarządzania chodzeniem,która będzie wyświetlałą też informacje,o tym,że np: Golem wyszedł z lasu.Ta funckja ma sie wyświetlić raz
+        }
+
+        //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ,a dzieki zastosowaniu drugiego argumentu,to w tedy,jakby...resetujemy,co pozwala ponownie wrócić z opowieści
+        if (player.inConfrontation && interactions.endStory == false)
+        {
+            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
+        }
     }
 
     /*Funckja Create Book
@@ -73,11 +96,25 @@ public class Managment : MonoBehaviour
     {
         if(chapter == indexStory)
         {
-            curretValuesToStorry[chapter] += values;
+            curretValuesToStorry[chapter] = values;
 
             if(curretValuesToStorry[chapter] == needValuesToStory[chapter])
             {
                 interactions.endStory = false;
+            }
+        }
+    }
+
+    /*Funckaj FindActiveButton
+     Szuka aktyuwnego przycisku,po to,by go zapisać w zmiennej w celu
+    ponownego jego uruchomienia po zakończeniu wyswietlania opowieści,bo...nie zawsze bedą te same przyciski*/
+    void FindActiveButton()
+    {
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            if(buttons[i].activeSelf)
+            {
+                activeButton = buttons[i];
             }
         }
     }

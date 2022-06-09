@@ -14,7 +14,7 @@ public class Interactions : MonoBehaviour
 
     //[SerializeField] coś[] action;
 
-    int indexS, textIndex,actuallyChapter;//Index Interakcji,Indeks Opowiści-Odwołuje się do Indexu opowiści,textIndex-Zmienna któa przechowuje idnex neizbedny do wyswietlania tekstu,aktualny rozdział-okresla aktualny rozdział,dzięki temu skrypt jest uniwersalny
+    int indexS, textIndex,shortTextIndex;//Index Interakcji,Indeks Opowiści-Odwołuje się do Indexu opowiści,textIndex-Zmienna któa przechowuje idnex neizbedny do wyswietlania tekstu,aktualny rozdział-okresla aktualny rozdział,dzięki temu skrypt jest uniwersalny
     float time;
 
     public bool endStory;//Okreśła koniec pisanen opowieści,dzięki temu w Managment jest możliwe zablokowanie,powtarzanie się opowieści
@@ -28,7 +28,7 @@ public class Interactions : MonoBehaviour
         endInteractions = true;
         indexS = 0;
         textIndex = 0;
-        actuallyChapter = 1;
+        shortTextIndex = 0;
         //tekstInteraction.text = null;
         tekstDescritpion.text = null;
         time = 0;
@@ -43,11 +43,13 @@ public class Interactions : MonoBehaviour
     któa sprawdza czy index tekstu jest więskzy od dłuiści "akapitu"
     jeżeli tak,to lecimy do następnego akapitu,zerujemy index tekstu
     potem jest klasyczna pętla spowalniająca*/
-    public void DisplayStory(int chapter,string[,] book, float t)
+    public void DisplayStory(GameObject button,bool isActive,int chapter,string[,] book, float t)
     {
         if (endStory == false)
         {
-            if (book[chapter, indexS] != null)
+            button.SetActive(isActive);
+
+            if (!(book[chapter, indexS] == null))
             {
                 if (textIndex > book[chapter,indexS].Length)
                 {
@@ -57,6 +59,7 @@ public class Interactions : MonoBehaviour
 
                 if (time >= t)
                 {
+                    Debug.Log("ok");
                     time = 0;
                     tekstDescritpion.text = book[chapter,indexS].Substring(0, textIndex);
                     textIndex++;
@@ -65,8 +68,10 @@ public class Interactions : MonoBehaviour
             }
             else
             {
-                actuallyChapter++;
                 endStory = true;
+                textIndex = 0;
+                indexS = 0;
+                button.SetActive(!isActive);
             }
         }
     }
@@ -100,7 +105,7 @@ public class Interactions : MonoBehaviour
                 textIndex++;
             }
 
-            //Write(story, t);
+            //Write(story[id - 1], t);
 
             if (textIndex > story[id - 1].Length)
             {
@@ -114,7 +119,7 @@ public class Interactions : MonoBehaviour
                 id = story.Length;
             }
 
-            time += Time.deltaTime;
+            //time += Time.deltaTime;
         }
         else
         {
@@ -122,13 +127,27 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    public void Write(string[] story,float t)
+    /*Funkcja Write
+     Pisze,to co podamy jako Argument typu stirng,w danym czasie.*/
+    public void Write(string text,float t)
     {
         if (time >= t)
         {
             time = 0;
-            tekstDescritpion.text = story[id - 1].Substring(0, textIndex);
-            textIndex++;
+            tekstDescritpion.text = text.Substring(0, shortTextIndex);
+            shortTextIndex++;
+        }
+        time += Time.deltaTime;
+    }
+
+    /*Funckja Repeat
+     Resetuje,po to,by na nowo powtarzac napis,ale nie zawsze*/
+    public void Repeat(string text)
+    {
+        if (shortTextIndex >= text.Length)
+        {
+            tekstDescritpion.text = "";
+            shortTextIndex = 0;
         }
     }
     /*public void DisplayInteraction(string[] dA)

@@ -25,4 +25,8 @@ MonoBehaviour:
   - "Widzisz lec\u0105c\u0105 w twoj\u0105 stron\u0119 Kule Nieczysto\u015Bci..."
   - "Widzisz Nacieraj\u0105c\u0105 na Ciebie Istot\u0119 Nieczysto\u015Bci..."
   - Co robisz?
-  descriptionInteractionPlayerToOpponent: []
+  descriptionInteractionPlayerToOpponent:
+  - "Zaatakowa\u0142e\u015B"
+  - "Bronisz si\u0119"
+  - "Podszkoczy\u0142e\u015B"
+  - "Uciek\u0142e\u015B"

@@ -67,6 +67,11 @@ public class Oponent : MonoBehaviour
                 Decision();
             }
             //---------------------------------------------------------
+            if(player.skills["Atack"])
+            {
+                Hit();
+            }
+            
             if (live == 0)
             {
                 Destroy(gameObject);
@@ -77,10 +82,14 @@ public class Oponent : MonoBehaviour
         else
         {
             time = 0;
+            isSet = false;
         }
 
     }
 
+    /*Funckja Draws
+     Losuje czas który po którym Opponent zaatakuje
+      Oraz dany czas do zmiany decyzji,i ustawia czas na 0,w celu kalibracji*/
     void Draws(float from,float to)
     {
         timeToGiveDamange = Random.Range(5f, 10f);
@@ -88,6 +97,11 @@ public class Oponent : MonoBehaviour
         time = 0;
     }
 
+    /*Funckaj Decysion
+     Losuje decyzje Opponenta w lokalnej zmiennej,i ustawia jego decyzjed,domysle na false
+    i w zaleznopści od wyboru,taką decyzje podejmuje.Na początku wszystkie są na false bo...jest to krótsze i ąłtwijesze rozwiązanie
+    miej obciążajace komputer
+    Po podjhęciu decyzji,znów losuje czas,w celu dynamicnzości Przeciwnika(coś jak AI)*/
     void Decision()
     {
         int decison = Random.Range(1, 2);
@@ -103,21 +117,24 @@ public class Oponent : MonoBehaviour
             defense = true;
         }
 
-        Draws(Random.Range(1f, 20f), Random.Range(30f, 300f));
+        Draws(Random.Range(1f, 20f), Random.Range(30f, 45f));
     }
 
+    /*Funckaj Atack
+     Okresla atak gracza,keidy chce zaatakować,to sprawdza czy czasa jest równy czasowi do zadania obrażeń
+    Jeżeli tak,to w zalezności od tego,ja opoonen zatakuje taskie parametry Obrony(czyli ProtecintOn i Jumpig) gracza sprawdza
+    I na tej podawie,albo zabiera mu  Swiatło,albo nie i Wyswietla dany Komunikat */
     void Atack()
     {
         if (wantAtack)
         {
-            time = 0;
             if (time >= timeToGiveDamange)
             {
                 //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji(distance atack i close atack dac jako lista,co pozwloli na zredukowanie ilości ifów)
                 //----------------------------------
                 if (distanceAtack)
                 {
-                    if (player.jumping)
+                    if (player.skills["Jumping"])
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
                         Decision();
@@ -131,7 +148,7 @@ public class Oponent : MonoBehaviour
                 }
                 else if (closeAtack)
                 {
-                    if (player.protectingOn)
+                    if (player.skills["ProtectingOn"])
                     {
                         //Zrobienie coś,że pojawi się informacja,że misną
                         Decision();
@@ -148,18 +165,30 @@ public class Oponent : MonoBehaviour
         }
     }
 
+    /*Funkcja Defense
+     Okresla Obrone Opponenta*/
     void Defense()
     {
-        if (player.atack && defense == false)
+        if (player.skills["Atack"] && defense == false)
         {
-            //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
-            live -= player.damange;
-            player.atack = false;
+            Hit();
         }
-        else if (player.atack && defense)
+        else if (player.skills["Atack"] && defense)
         {
             //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
-            player.atack = false;
+            player.skills["Atack"] = false;
         }
+    }
+
+    /*Funckaj Hit
+     Określa obrażenia zadawane Opponentowi.Funckja pwostała glownie po toz, koniecozści uyzycia podówje tego samego kodu*/
+    void Hit()
+    {
+        //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
+        live -= player.damange;
+        player.skills["Atack"] = false;
+
+        managment.diededMolochs += 1;
+        managment.ToStory(1, managment.diededMolochs);
     }
 }
