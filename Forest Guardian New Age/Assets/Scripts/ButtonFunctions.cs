@@ -73,16 +73,16 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void ProtectingOn()
     {
-        //PlayerDecision(2);
+        PlayerDecision(2);
     }
     public void Jumping()
     {
-        //PlayerDecision(3);
+        PlayerDecision(3);
     }
     public void RunAway()
     {
-        //player.actuallyPosition -= 5;
-        //interactions.id = 5;
+        player.actuallyPosition -= 5;
+        interactions.id = 5;
     }
 
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|

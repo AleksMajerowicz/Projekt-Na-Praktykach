@@ -49,22 +49,21 @@ public class Oponent : MonoBehaviour
             //---------------------------------------------------
             if (isSet == false)
             {
-                managment.oponentName = oponentName;
-                interactions.id = 1;
                 for(int i = 0; i < textOpponentInteractions.Length; i++)
                 {
                     story.descritpionInteractions[i] = textOpponentInteractions[i];
                 }
-                interactions.endInteractions = false;
                 player.inConfrontation = true;
-                interactions.endInteractions = false;
-                isSet = true;
+                SetParamets(oponentName, 1, false, true);
                 Decision();
             }
             //---------------------------------------------------
 
-            Atack();
-            Defense();
+            if (player.skills["Jumping"] == false)
+            {
+                Atack();
+                Defense();
+            }
 
             /*W przypadku Obrony,kiedy jest ustawiona,to sprawdza czy czas jest większy lub róny Czasowi do zmainy Decyzji;
              * Jeżeli tak,to ją zmienia.
@@ -85,10 +84,8 @@ public class Oponent : MonoBehaviour
             if (live == 0)
             {
                 managment.diededMolochs += 1;
-                interactions.id = 4;
-                interactions.endInteractions = false;
+                SetParamets(null, 4, false, false);
                 managment.isOpponentDoSomething = false;
-                managment.oponentName = null;
                 Destroy(gameObject);
             }
 
@@ -96,14 +93,19 @@ public class Oponent : MonoBehaviour
         }
         else
         {
-            //interactions.id = 5;
-            //interactions.endInteractions = false;
-            //managment.isOpponentDoSomething = false;
-            //managment.oponentName = null; zrobić łądną funckje do tego :3
             time = 0;
-            isSet = false;
+            SetParamets(null, 5, false, false);
+            managment.isOpponentDoSomething = false;
         }
 
+    }
+
+    void SetParamets(string name, int id,bool whatEnd,bool set)
+    {
+        managment.oponentName = name;
+        interactions.id = id;
+        interactions.endInteractions = whatEnd;
+        isSet = set;
     }
 
     /*Funckja Draws
@@ -123,7 +125,7 @@ public class Oponent : MonoBehaviour
     Po podjhęciu decyzji,znów losuje czas,w celu dynamicnzości Przeciwnika(coś jak AI)*/
     void Decision()
     {
-        int decison = 0;//Random.Range(2, 2);
+        int decison = Random.Range(1, 10);
         wantAtack = false;
         defense = false;
 
@@ -151,37 +153,34 @@ public class Oponent : MonoBehaviour
             {
                 //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji(distance atack i close atack dac jako lista,co pozwloli na zredukowanie ilości ifów)
                 //----------------------------------
-                if (distanceAtack)
+                if (distanceAtack && player.skills["Jumping"])
                 {
-                    if (player.skills["Jumping"])
-                    {
-                        //Zrobienie coś,że pojawi się informacja,że misną   
-                        Decision();
-                    }
-                    else
-                    {
-                        interactions.id = 3;//*Zrobić funckej ustawiajacą poszczególne parametry
-                        interactions.endInteractions = false;
-                        player.isHit = true;
-                        player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Decision();
-                    }
+
+                    //Zrobienie coś,że pojawi się informacja,że misną   
+                    Decision();
                 }
-                else if (closeAtack)
+                else if (distanceAtack && player.skills["Jumping"] == false)
                 {
-                    if (player.skills["ProtectingOn"])
-                    {
-                        //Zrobienie coś,że pojawi się informacja,że misną
-                        Decision();
-                    }
-                    else
-                    {
-                        interactions.id = 3;
-                        interactions.endInteractions = false;
-                        player.isHit = true;
-                        player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
-                        Decision();
-                    }
+                    interactions.id = 3;//*Zrobić funckej ustawiajacą poszczególne parametry
+                    interactions.endInteractions = false;
+                    player.isHit = true;
+                    player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
+                    Decision();
+                }
+
+                else if (closeAtack && player.skills["ProtectingOn"])
+                {
+                    //Zrobienie coś,że pojawi się informacja,że misną
+                    Decision();
+
+                }
+                else if (closeAtack && player.skills["ProtectingOn"] == false)
+                {
+                    interactions.id = 3;
+                    interactions.endInteractions = false;
+                    player.isHit = true;
+                    player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
+                    Decision();
                 }
                 //---------------------------------------
             }

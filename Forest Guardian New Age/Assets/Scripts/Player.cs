@@ -72,8 +72,6 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(skills["ProtectingOn"]);
-
         /*Kiedy golem jest w konfrontacji,to w tedy jest otwarty na zmieniane parametrów takich jak jumping czy ProtectingOn
         Kiedy nie,to włączany jest Panel Poruszania sie gracza
          */
@@ -88,13 +86,12 @@ public class Player : MonoBehaviour
 
             if(skills["Jumping"])
             {
-                if(timeGravity > gravity && interactions.endInteractions == false)
+                timeGravity += Time.deltaTime;
+                if (timeGravity > gravity && interactions.endInteractions == false)
                 {
                     skills["Jumping"] = false;
-                    timeGravity = 0;//*
-                    Debug.Log("ok");
+                    timeGravity = 0;
                 }
-                timeGravity += Time.deltaTime;
             }
             
             CalculatingSkillsTime();

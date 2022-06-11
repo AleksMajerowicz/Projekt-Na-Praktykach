@@ -68,15 +68,19 @@ public class Managment : MonoBehaviour
         }
 
         //Ten if,wyswietla Panel ataku Golema w Danje formie RAZ,a dzieki zastosowaniu drugiego argumentu,to w tedy,jakby...resetujemy,co pozwala ponownie wrócić z opowieści
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
         if (player.inConfrontation && interactions.endStory && isOpponentDoSomething == false)
         {
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
         }
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------
         if(player.isHit)
         {
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
         }
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
         if(player.skills["Jumping"] && isOpponentDoSomething && player.onGround)
         {
@@ -120,7 +124,7 @@ public class Managment : MonoBehaviour
 
             if(curretValuesToStorry[chapter] == needValuesToStory[chapter])
             {
-                interactions.endStory = true;
+                interactions.endStory = false;
             }
         }
     }

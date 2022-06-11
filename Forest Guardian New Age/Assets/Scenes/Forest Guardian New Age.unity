@@ -3154,7 +3154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1025677969}
   interactions: {fileID: 1903880250}
-  managment: {fileID: 0}
+  managment: {fileID: 128446286}
   story: {fileID: 11400000, guid: 4d6ef60dae5d6d54fa79e171050ca943, type: 2}
   buttons:
   - {fileID: 1809217139}

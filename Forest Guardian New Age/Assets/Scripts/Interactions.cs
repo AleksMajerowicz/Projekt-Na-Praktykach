@@ -48,7 +48,7 @@ public class Interactions : MonoBehaviour
     {
         if (endStory == false)
         {
-            //button.SetActive(isActive);
+            button.SetActive(isActive);
             
             if (book[chapter,indexS] != null)
             {
@@ -91,9 +91,10 @@ public class Interactions : MonoBehaviour
     * t okreśła czas wyswietlania się napisów
     * a id określa id oponenta,jak i umiejętności
     * |Naprawić tak,by można się było odołąć do koncowego indexu,mając ten argument funckji: id|
+    * zmienna nazwa skilla określa skill,który będzie sprawdzany.Domyślnie ma Wartosc null,bo to bedzie potrzebne,keidy funckaj jest wużywana do wyswietlania interakcji z Opoonentem i na odwót
     */
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t)
+    public void ManagmentInteraction(GameObject interactionsToActive, GameObject interactionsToDeactive, string [] story,bool isActive, float t,string skillName = null)
     {
         if (endInteractions == false && endStory)
         {
