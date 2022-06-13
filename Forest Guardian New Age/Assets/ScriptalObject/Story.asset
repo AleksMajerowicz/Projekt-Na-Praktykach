@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Story
   m_EditorClassIdentifier: 
   story:
-  - "Golem przyby\u0142"
-  - "By\u0142 tu od Tysi\u0105cleci"
-  - "teraz si\u0119 przebudzi\u0142"
-  - "zeby Oczy\u015Bci\u0107 Laa"
+  - "Golem \u015Awiat\u0142a.Stra\u017Cnik Lasu,kt\xF3ry by\u0142 tu od jego narodzi\u0142."
+  - "W Zamiesz\u0142ych czasach, Nieczysto\u015B\u0107 Zaatakowa\u0142a Las,w tedy
+    Golem Go Obroni\u0142"
+  - "Teraz zn\xF3w Nieczysto\u015B\u0107 przyby\u0142a..."
+  - "I Golem,...ponownie sie przebudzi\u0142"
   chapter:
   - "Rozdzia\u0142 I"
   - "Rozdzia\u0142 II"
@@ -24,7 +25,8 @@ MonoBehaviour:
   - Spotykasz Molocha...
   - "Widzisz lec\u0105c\u0105 w twoj\u0105 stron\u0119 Kule Nieczysto\u015Bci..."
   - "Zosta\u0142\u0119\u015B trafiony Kul\u0105 Nieczystosci!"
-  - "Pokona\u0142e\u015B Molocha..."
+  - "Moloch obroni\u0142 si\u0119 przed Twoim Atakiem"
+  - "Pokona\u0142\u0119\u015B Molocha..."
   - Co robisz?
   descriptionInteractionPlayerToOpponent:
   - "Zaatakowa\u0142e\u015B"
@@ -32,3 +34,4 @@ MonoBehaviour:
   - "Podszkoczy\u0142e\u015B"
   - "Upad\u0142\u0119\u015B.Jeste\u015B na ziemi"
   - "Uciek\u0142e\u015B"
+  - Co robisz?

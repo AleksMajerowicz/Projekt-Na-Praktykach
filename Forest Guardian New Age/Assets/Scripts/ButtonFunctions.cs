@@ -57,12 +57,11 @@ public class ButtonFunctions : MonoBehaviour
             player.skills[playerSkills[index - 1]] = true;
             player.timneToReady[timneToReady[index - 1]] = 0;
             interactions.id = index;
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1],buttons[player.aktualnaForma -1],story.descriptionInteractionPlayerToOpponent, false,0.5f);
+            managment.playerDoing = true;
         }
         else
         {
             interactions.id = index;//Indek odpoczynku
-            interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, false, 0.5f);
         }
 
     }
@@ -77,12 +76,12 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void Jumping()
     {
-        PlayerDecision(3);
+        //PlayerDecision(3);Jesteb blisko naprawienia skoku,ale konieczna jest zmiana w skrycpie ManagmentInteractions
     }
     public void RunAway()
     {
         player.actuallyPosition -= 5;
-        interactions.id = 5;
+        player.ranAway = true;
     }
 
     //Ta Funkcja Kalibruje Parametry z Gracza,to list,by mozna siê do nich uniwersalnie odo³aæ.|Aktualnie nei wiem,jak to Z dynamicnzym czasem zrobniæ|

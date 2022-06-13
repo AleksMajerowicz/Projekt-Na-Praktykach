@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
     float timeMoving;//Czas chodzenia-okresala aktalny czas chodzenia gracza
     public Dictionary<string, float> timneToReady = new Dictionary<string, float>();
 
-    public bool isHit, onGround;
+    public bool isHit, onGround,ranAway;
     float gravity,timeGravity;//*
     // Start is called before the first frame update
     void Start()
@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
         timneToReady.Add("TimeToReadyJumping", 0);//Czas gotowości do Skoku-Określa aktualny czas
 
         isMoving = false;
+        ranAway = false;
         isHit = false;
         onGround = true;
 
@@ -71,10 +72,10 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         /*Kiedy golem jest w konfrontacji,to w tedy jest otwarty na zmieniane parametrów takich jak jumping czy ProtectingOn
         Kiedy nie,to włączany jest Panel Poruszania sie gracza
          */
+
         if (inConfrontation)
         {
             ManagmentHPBarsPlayer();
@@ -89,7 +90,7 @@ public class Player : MonoBehaviour
                 timeGravity += Time.deltaTime;
                 if (timeGravity > gravity && interactions.endInteractions == false)
                 {
-                    skills["Jumping"] = false;
+                    onGround = true;
                     timeGravity = 0;
                 }
             }

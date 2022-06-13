@@ -44,15 +44,15 @@ public class Interactions : MonoBehaviour
     jeżeli tak,to lecimy do następnego akapitu,zerujemy index tekstu
     potem jest klasyczna pętla spowalniająca*/
     //--------------------------------------------------------------------------------------------------
-    public void DisplayStory(GameObject button,bool isActive,int chapter,string[,] book, float t)
+    public void DisplayStory(bool isActive,int chapter,List<List<string>> book, float t)
     {
         if (endStory == false)
         {
-            button.SetActive(isActive);
-            
-            if (book[chapter,indexS] != null)
+            managment.activeButton.SetActive(isActive);
+
+            if (indexS < book[chapter].Count)
             {
-                if (textIndex > book[chapter,indexS].Length)
+                if (textIndex >= book[chapter][indexS].Length)
                 {
                     indexS++;
                     textIndex = 0;
@@ -61,7 +61,7 @@ public class Interactions : MonoBehaviour
                 if (time >= t)
                 {
                     time = 0;
-                    tekstDescritpion.text = book[chapter,indexS].Substring(0, textIndex);
+                    tekstDescritpion.text = book[chapter][indexS].Substring(0, textIndex);
                     textIndex++;
                 }
                 time += Time.deltaTime;
@@ -71,7 +71,8 @@ public class Interactions : MonoBehaviour
                 endStory = true;
                 textIndex = 0;
                 indexS = 0;
-                button.SetActive(!isActive);
+                managment.nextChapter();
+                managment.activeButton.SetActive(!isActive);
             }
         }
     }
@@ -128,13 +129,13 @@ public class Interactions : MonoBehaviour
             endInteractions = true;
             //Do spojrzena na nowo!
             //------------------------------------------------------------------------------------------------
-            if (player.inConfrontation && managment.isOpponentDoSomething == false && managment.oponentName == null)
+            if (player.inConfrontation && managment.opponentDoing && managment.oponentName == null)
             {
                 player.inConfrontation = false;
             }
-            else if(player.inConfrontation && managment.isOpponentDoSomething == false && managment.oponentName != null)
+            else if(player.inConfrontation && managment.opponentDoing && managment.oponentName != null)
             {
-                managment.isOpponentDoSomething = true;
+                managment.opponentDoing = true;
             }
 
             if (player.skills["Jumping"])
@@ -146,6 +147,19 @@ public class Interactions : MonoBehaviour
                 player.onGround = true;
             }
             //-------------------------------------------------------------------------------------------------
+
+            if(managment.opponentDoing)
+            {
+                managment.opponentDoing = false;
+            }
+            else if(managment.playerDoing)
+            {
+                managment.playerDoing = false;
+            }
+            else if(player.ranAway)
+            {
+                player.ranAway = false;
+            }
         }
     }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------

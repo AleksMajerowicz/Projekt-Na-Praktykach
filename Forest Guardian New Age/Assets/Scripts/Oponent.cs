@@ -17,8 +17,10 @@ public class Oponent : MonoBehaviour
     bool wantAtack;//Określa,czy Przeciwnik chce zaatakować,Bedzie true kiedy czas bedzie równy losowemu czasowi
     public bool defense;//Określa czy Opponent postanowił bronić się
     bool isSet;//określa,czy Skrypt Managment dostał potrzebne informacje.Dizęki temu,możliwe jest zmienienie w Funkcji "Zarządzaniem Interakcjami" id na ostatni index Opisu Opowieści,czyli na "Co robisz?"
+    public bool isHit;
+    public bool isDefense;
 
-    float timeToChangeDecision,timeToGiveDamange,time;//Czas do wykonania-określa czas do wykonania danej czynności,Czas Do Zadania obrażeń-określa czas do zadania obrażeń graczowi,czas-zawiera aktualnyczas
+    [SerializeField]float timeToChangeDecision,timeToGiveDamange,time;//Czas do wykonania-określa czas do wykonania danej czynności,Czas Do Zadania obrażeń-określa czas do zadania obrażeń graczowi,czas-zawiera aktualnyczas
 
     [Header("odwołania")]
     [SerializeField] Player player;
@@ -34,6 +36,8 @@ public class Oponent : MonoBehaviour
         wantAtack = false;
         defense = false;
         isSet = false;
+        isHit = false;
+        isDefense = false;
     }
 
     // Update is called once per frame
@@ -54,7 +58,8 @@ public class Oponent : MonoBehaviour
                     story.descritpionInteractions[i] = textOpponentInteractions[i];
                 }
                 player.inConfrontation = true;
-                SetParamets(oponentName, 1, false, true);
+                managment.opponentDoing = true;
+                SetParamets(gameObject,1, false, true);
                 Decision();
             }
             //---------------------------------------------------
@@ -62,8 +67,8 @@ public class Oponent : MonoBehaviour
             if (player.skills["Jumping"] == false)
             {
                 Atack();
-                Defense();
             }
+            Defense();
 
             /*W przypadku Obrony,kiedy jest ustawiona,to sprawdza czy czas jest większy lub róny Czasowi do zmainy Decyzji;
              * Jeżeli tak,to ją zmienia.
@@ -84,28 +89,35 @@ public class Oponent : MonoBehaviour
             if (live == 0)
             {
                 managment.diededMolochs += 1;
-                SetParamets(null, 4, false, false);
-                managment.isOpponentDoSomething = false;
+                SetParamets(null,5, false, false);
+                managment.opponentDoing = true;
+                player.inConfrontation = false;
+                managment.DeActiveButtons();
                 Destroy(gameObject);
             }
 
-            time += Time.deltaTime;
+            if (interactions.endInteractions)
+            {
+                time += Time.deltaTime;
+            }
         }
-        else
+        else if(player.inConfrontation && player.ranAway)
         {
             time = 0;
             SetParamets(null, 5, false, false);
-            managment.isOpponentDoSomething = false;
+            player.inConfrontation = false;
+            managment.DeActiveButtons();
         }
 
     }
 
-    void SetParamets(string name, int id,bool whatEnd,bool set)
+    void SetParamets(GameObject opponent, int id,bool whatEnd,bool set)
     {
-        managment.oponentName = name;
+        managment.opponent= opponent;
         interactions.id = id;
         interactions.endInteractions = whatEnd;
         isSet = set;
+
     }
 
     /*Funckja Draws
@@ -125,7 +137,7 @@ public class Oponent : MonoBehaviour
     Po podjhęciu decyzji,znów losuje czas,w celu dynamicnzości Przeciwnika(coś jak AI)*/
     void Decision()
     {
-        int decison = Random.Range(1, 10);
+        int decison = Random.Range(2, 2);
         wantAtack = false;
         defense = false;
 
@@ -153,18 +165,15 @@ public class Oponent : MonoBehaviour
             {
                 //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji(distance atack i close atack dac jako lista,co pozwloli na zredukowanie ilości ifów)
                 //----------------------------------
-                if (distanceAtack && player.skills["Jumping"])
+                if (distanceAtack && player.skills["Jumping"] || distanceAtack && player.skills["ProtectingOn"])
                 {
 
                     //Zrobienie coś,że pojawi się informacja,że misną   
                     Decision();
                 }
-                else if (distanceAtack && player.skills["Jumping"] == false)
+                else if (distanceAtack && player.skills["Jumping"] == false || distanceAtack && player.skills["ProtectingOn"] == false)
                 {
-                    interactions.id = 3;//*Zrobić funckej ustawiajacą poszczególne parametry
-                    interactions.endInteractions = false;
-                    player.isHit = true;
-                    player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
+                    SetPlayerParamets();
                     Decision();
                 }
 
@@ -176,10 +185,7 @@ public class Oponent : MonoBehaviour
                 }
                 else if (closeAtack && player.skills["ProtectingOn"] == false)
                 {
-                    interactions.id = 3;
-                    interactions.endInteractions = false;
-                    player.isHit = true;
-                    player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
+                    SetPlayerParamets();
                     Decision();
                 }
                 //---------------------------------------
@@ -191,13 +197,15 @@ public class Oponent : MonoBehaviour
      Okresla Obrone Opponenta*/
     void Defense()
     {
+        
         if (player.skills["Atack"] && defense == false)
         {
             Hit();
         }
         else if (player.skills["Atack"] && defense)
         {
-            //odwołanie się do Funkcji piszaca Interakcje(lista interakcji gracza na opponenta[index])
+            interactions.id = 3;
+            isDefense = true;
             player.skills["Atack"] = false;
         }
     }
@@ -206,10 +214,17 @@ public class Oponent : MonoBehaviour
      Określa obrażenia zadawane Opponentowi.Funckja pwostała glownie po toz, koniecozści uyzycia podówje tego samego kodu*/
     void Hit()
     {
-        //odwołanie się do Funkji piszaca interackje(lista interakcji gracza na opponenta[index])
         live -= player.damange;
         player.skills["Atack"] = false;
+    }
 
-        managment.ToStory(1, managment.diededMolochs);
+    void SetPlayerParamets()
+    {
+        interactions.id = 3;
+        interactions.endInteractions = false;
+        player.isHit = true;
+        managment.opponentDoing = true;
+        player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
+        time = 0;
     }
 }
