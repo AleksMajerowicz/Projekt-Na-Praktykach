@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Managment : MonoBehaviour
 {
-    public string oponentName;
-
+    [Header("Odwołania")]
     [SerializeField] Player player;
     [SerializeField] Interactions interactions;
     [SerializeField] Story story;
@@ -13,18 +14,32 @@ public class Managment : MonoBehaviour
     public GameObject opponent;
     public GameObject activeButton;
 
-    //[SerializeField] string[,] storyBook;//Tworzy "Książkę"
+    [Header("Do Zarzadzani Fabułą")]
     [SerializeField] List<List<string>> storyBook = new List<List<string>>();//Tworzy "Książkę"
     int chapter;//Określa aktualny rozdział
     [SerializeField]int[] needValuesToStory, curretValuesToStorry;// Potrzebne wartości do Opowieści-określa wartości,które są neizbędne by opowieśc rusyzła dalej, aktualne Wartosci do Opowieści-Określa aktualne nparametry do opowieści
 
+    [Header("Globalne Parametry do zarządzanie Fabuły")]
     //Do przyszłęgo skryptu na zarządzanie umiejętnościami
-    public int diededMolochs;
+    public int diededMolochs;//Okreśła,ile zabiłęś Molochów
     public bool opponentDoing;//Określa,czy Opponentcoś robi
     public bool playerDoing;//Określa czy gracz cos robi
+
+    [Header("Parametry Opponenta")]
+    [SerializeField] GameObject opponentAvatars;
+    [SerializeField] TMP_Text textOpponentName;
+    [SerializeField] GameObject[] opponentsLive;
+    public string oponentName;
+    int basicOpponentsLive;
+    int oldBaicOpponentLive;
+    bool isSet;
+
     // Start is called before the first frame update
     void Start()
     {
+        SetOpponentsParamets();
+        isSet = false;
+
         chapter = 0;
         opponentDoing = false;
         playerDoing = false;
@@ -68,7 +83,6 @@ public class Managment : MonoBehaviour
         {
             if (playerDoing && interactions.endStory && opponent != false)
             {
-                Debug.Log("1");
                 interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
             }
 
@@ -76,14 +90,12 @@ public class Managment : MonoBehaviour
             //----------------------------------------------------------------------------------------------------------------------------------------------------------
             if (interactions.endStory && opponentDoing)
             {
-                Debug.Log("2");
                 interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
             }
             //----------------------------------------------------------------------------------------------------------------------------------------------------------
         }
         else if (player.ranAway)
         {
-            Debug.Log("3"); 
             interactions.ManagmentInteraction(buttons[1], buttons[buttons.Length - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
         }
         else if(player.inConfrontation == false)
@@ -93,10 +105,21 @@ public class Managment : MonoBehaviour
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
         ManegmentPlayerComunitations();
-
-        if (opponent != null)
+        if(opponent != null )
         {
-            ManegmentOpponentComunitations();
+            if (isSet == false)
+            {
+                ManagmentOpponentsParamets(true);
+            }
+
+            if(opponentDoing)
+            {
+                ManegmentOpponentComunitations();
+            }
+        }
+        else if(opponent == null && isSet)
+        {
+            ManagmentOpponentsParamets(false);
         }
     }
 
@@ -149,6 +172,16 @@ public class Managment : MonoBehaviour
         }
     }
 
+    void SetOpponentsParamets()
+    {
+        oponentName = null;
+        opponentAvatars.SetActive(false);
+        for (int i = 0; i < opponentsLive.Length; i++)
+        {
+            opponentsLive[i].SetActive(false);
+        }
+    }
+
     //Ta fucnka istnieje po to,by zmeinna ozdizał, nie była publiczna
     public void nextChapter()
     {
@@ -164,18 +197,36 @@ public class Managment : MonoBehaviour
 
         if (player.skills["Jumping"] && opponentDoing == false && player.onGround)
         {
-            Debug.Log("3");
             interactions.id = 3;
             interactions.endInteractions = false;
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
         }
         else if (player.skills["Jumping"] == false && opponentDoing == false && player.onGround == false)
         {
-            Debug.Log("4");
             interactions.id = 4;
             interactions.endInteractions = false;
             interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[player.aktualnaForma - 1], story.descriptionInteractionPlayerToOpponent, true, 0.1f);
         }
+    }
+
+    void ManagmentOpponentsParamets(bool isAvtive)
+    {
+        textOpponentName.text = oponentName;
+        opponentAvatars.SetActive(isAvtive);
+        basicOpponentsLive = opponent.GetComponent<Oponent>().live;
+        if (opponent.GetComponent<Oponent>().live != oldBaicOpponentLive)
+        {
+            opponentsLive[basicOpponentsLive].SetActive(false);
+        }
+        else
+        {
+            for (int i = 0; i < basicOpponentsLive; i++)
+            {
+                opponentsLive[i].SetActive(isAvtive);
+            }
+            isSet = isAvtive;
+        }
+        oldBaicOpponentLive = basicOpponentsLive;
     }
 
     void ManegmentOpponentComunitations()

@@ -9,6 +9,7 @@ public class Oponent : MonoBehaviour
     [SerializeField] int id;//określa id,co pozwala na odołanie się do odpowiadająceog mu Indexu w story
     public int live;//Określa ilość życia
     [SerializeField]int damage;//Określa zadawane Obrażenia Graczowi
+    [SerializeField] int consumeLight;
     public float location;//Okresla pozycje Oponentu
     [SerializeField] bool distanceAtack;//Okresla czy oponent atakuje z odległości
     [SerializeField] bool closeAtack;//określa czy oponent atakuje z Bliska
@@ -59,7 +60,7 @@ public class Oponent : MonoBehaviour
                 }
                 player.inConfrontation = true;
                 managment.opponentDoing = true;
-                SetParamets(gameObject,1, false, true);
+                SetParamets(oponentName,gameObject,1, false, true);
                 Decision();
             }
             //---------------------------------------------------
@@ -88,8 +89,9 @@ public class Oponent : MonoBehaviour
             
             if (live == 0)
             {
+                player.iloscSwiatla[player.aktualnaForma - 1] += consumeLight;
                 managment.diededMolochs += 1;
-                SetParamets(null,5, false, false);
+                SetParamets(null,null,5, false, false);
                 managment.opponentDoing = true;
                 player.inConfrontation = false;
                 managment.DeActiveButtons();
@@ -104,15 +106,16 @@ public class Oponent : MonoBehaviour
         else if(player.inConfrontation && player.ranAway)
         {
             time = 0;
-            SetParamets(null, 5, false, false);
+            SetParamets(null,null, 5, false, false);
             player.inConfrontation = false;
             managment.DeActiveButtons();
         }
 
     }
 
-    void SetParamets(GameObject opponent, int id,bool whatEnd,bool set)
+    void SetParamets(string nameOpponent,GameObject opponent, int id,bool whatEnd,bool set)
     {
+        managment.oponentName = nameOpponent;
         managment.opponent= opponent;
         interactions.id = id;
         interactions.endInteractions = whatEnd;
