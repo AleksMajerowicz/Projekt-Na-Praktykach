@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Oponent : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class Oponent : MonoBehaviour
     bool isSet;//określa,czy Skrypt Managment dostał potrzebne informacje.Dizęki temu,możliwe jest zmienienie w Funkcji "Zarządzaniem Interakcjami" id na ostatni index Opisu Opowieści,czyli na "Co robisz?"
     public bool isHit;
     public bool isDefense;
+    public bool shootFilthBall;
 
     [SerializeField]float timeToChangeDecision,timeToGiveDamange,time;//Czas do wykonania-określa czas do wykonania danej czynności,Czas Do Zadania obrażeń-określa czas do zadania obrażeń graczowi,czas-zawiera aktualnyczas
 
@@ -28,6 +30,7 @@ public class Oponent : MonoBehaviour
     [SerializeField] Interactions interactions;
     [SerializeField] Managment managment;
     [SerializeField] Story story;
+    [SerializeField] TMP_Text timer;
 
     [Header("Do Opowieści")]
     public string[] textOpponentInteractions;//Zawiera Interakcje Oponenta.Dizęki temu,można dynamicznie zmieniać zmienną descritpionInteractions
@@ -39,6 +42,7 @@ public class Oponent : MonoBehaviour
         isSet = false;
         isHit = false;
         isDefense = false;
+        shootFilthBall = false;
     }
 
     // Update is called once per frame
@@ -60,28 +64,28 @@ public class Oponent : MonoBehaviour
                 }
                 player.inConfrontation = true;
                 managment.opponentDoing = true;
-                SetParamets(oponentName,gameObject,1, false, true);
+                SetParamets(oponentName,gameObject,1, false, true);//Wyświetlanie "Spotykach Molocha"
                 Decision();
             }
             //---------------------------------------------------
 
-            if (player.skills["Jumping"] == false)
+            if (player.skills["Jumping"] == false && interactions.endInteractions)
             {
                 Atack();
             }
             Defense();
+            Debug.Log(interactions.id);
 
             /*W przypadku Obrony,kiedy jest ustawiona,to sprawdza czy czas jest większy lub róny Czasowi do zmainy Decyzji;
              * Jeżeli tak,to ją zmienia.
              * tutaj nie ustawiamy nowej zmiennej,któa będzie okreslaął czas do zmiany decyzji,tylko po przez uwzgleninie parametru wantAtack
              * "Przekierowywujemy" zmienną czas,na obliczanie czasu do zmiany Decyzji.
              */
-            //---------------------------------------------------------
-            if (time >= timeToChangeDecision && wantAtack == false)
+            if(time >= timeToChangeDecision)
             {
                 Decision();
             }
-            //---------------------------------------------------------
+            
             if(player.skills["Atack"])
             {
                 Hit();
@@ -91,7 +95,7 @@ public class Oponent : MonoBehaviour
             {
                 player.iloscSwiatla[player.aktualnaForma - 1] += consumeLight;
                 managment.diededMolochs += 1;
-                SetParamets(null,null,5, false, false);
+                SetParamets(null,null,6, false, false);//Wyświetlanie "Pokonałęś Molocha"
                 managment.opponentDoing = true;
                 player.inConfrontation = false;
                 managment.DeActiveButtons();
@@ -106,7 +110,8 @@ public class Oponent : MonoBehaviour
         else if(player.inConfrontation && player.ranAway)
         {
             time = 0;
-            SetParamets(null,null, 5, false, false);
+            SetParamets(null,null, 5, false, false);//Wyświetlanie "Uciekłęś"
+            timer.text = "";
             player.inConfrontation = false;
             managment.DeActiveButtons();
         }
@@ -164,14 +169,32 @@ public class Oponent : MonoBehaviour
     {
         if (wantAtack)
         {
+            if(time < timeToGiveDamange)
+            {
+                if(shootFilthBall == false)
+                {
+                    interactions.endInteractions = false;
+                    managment.opponentDoing = true;
+                    shootFilthBall = true;
+                    interactions.id = 2;//Wyświetlanie "Widzisz Lecącą w twoją stornę Kulę Nieczystości"
+                }
+
+                timer.text = (Mathf.Round(timeToGiveDamange - time)).ToString();
+            }
+
             if (time >= timeToGiveDamange)
             {
+                timer.text = "";
                 //Zrobienie w chuj skomplikowanego,ale uniwersalnego skryptu,że to,bedize w kilku linijakch jako ciąg wywoływanych funckji(distance atack i close atack dac jako lista,co pozwloli na zredukowanie ilości ifów)
                 //----------------------------------
                 if (distanceAtack && player.skills["Jumping"] || distanceAtack && player.skills["ProtectingOn"])
                 {
 
-                    //Zrobienie coś,że pojawi się informacja,że misną   
+                    interactions.id = 3;
+                    interactions.endInteractions = false;
+                    managment.opponentDoing = true;
+                    player.skills["ProtectingOn"] = false;
+                    shootFilthBall = false;
                     Decision();
                 }
                 else if (distanceAtack && player.skills["Jumping"] == false || distanceAtack && player.skills["ProtectingOn"] == false)
@@ -182,7 +205,11 @@ public class Oponent : MonoBehaviour
 
                 else if (closeAtack && player.skills["ProtectingOn"])
                 {
-                    //Zrobienie coś,że pojawi się informacja,że misną
+                    interactions.id = 3;
+                    interactions.endInteractions = false;
+                    player.skills["ProtectingOn"] = false;
+                    managment.opponentDoing = true;
+                    shootFilthBall = false;
                     Decision();
 
                 }
@@ -204,12 +231,14 @@ public class Oponent : MonoBehaviour
         if (player.skills["Atack"] && defense == false)
         {
             Hit();
+            Decision();
         }
         else if (player.skills["Atack"] && defense)
         {
-            interactions.id = 3;
+            interactions.id = 5;//Wyświetlanie "Moloch obronił się przed twoim atakiem"
             isDefense = true;
             player.skills["Atack"] = false;
+            Decision();
         }
     }
 
@@ -223,10 +252,10 @@ public class Oponent : MonoBehaviour
 
     void SetPlayerParamets()
     {
-        interactions.id = 3;
+        interactions.id = 4;//Wyświetlanie "Zostałęś trafiony Kulą nieczystości"
         interactions.endInteractions = false;
-        player.isHit = true;
         managment.opponentDoing = true;
+        shootFilthBall = false;
         player.iloscSwiatla[player.aktualnaForma - 1] -= damage;
         time = 0;
     }

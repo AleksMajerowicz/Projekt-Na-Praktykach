@@ -28,6 +28,7 @@ public class Managment : MonoBehaviour
     [Header("Parametry Opponenta")]
     [SerializeField] GameObject opponentAvatars;
     [SerializeField] TMP_Text textOpponentName;
+    [SerializeField] TMP_Text timer;
     [SerializeField] GameObject[] opponentsLive;
     public string oponentName;
     int basicOpponentsLive;
@@ -42,6 +43,7 @@ public class Managment : MonoBehaviour
 
         chapter = 0;
         opponentDoing = false;
+        timer.text = "";
         playerDoing = false;
 
         CreateBook();
@@ -90,6 +92,7 @@ public class Managment : MonoBehaviour
             //----------------------------------------------------------------------------------------------------------------------------------------------------------
             if (interactions.endStory && opponentDoing)
             {
+                Debug.Log("YEY :D");
                 interactions.ManagmentInteraction(buttons[player.aktualnaForma - 1], buttons[buttons.Length - 1], story.descritpionInteractions, true, 0.1f);
             }
             //----------------------------------------------------------------------------------------------------------------------------------------------------------
